@@ -61,3 +61,11 @@
 #### Занятие 5. (Владимир Гулин)
 
 #### Занятие 6. (Владимир Гулин)
+
+### Литература
+
+[bishop] Pattern Recognition and Machine Learning // Cristopher M. Bishop (http://research.microsoft.com/en-us/um/people/cmbishop/prml/)
+
+[duda] Pattern Classification // Richard O. Duda, Peter E. Hart, David G. Stork (http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0471056693.html)
+
+[rajaraman] Mining of Massive Datasets // Anand Rajaraman, Jeffrey Ullman (http://infolab.stanford.edu/~ullman/mmds/book.pdf)
