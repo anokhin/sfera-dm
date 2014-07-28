@@ -50,7 +50,7 @@
 **Практическая часть.** Выбор подходящей функции ядра для различных наборов данных. Grid search.
 ### Модуль 2. Дополнительные главы Data Mining
 
-#### Занятие 1. Снижение размерности признакового пространства  (Владимир Гулин)
+#### Занятие 1. Снижение размерности пространства  (Владимир Гулин)
 
 **Теоретическая часть.** Проблема проклятия размерности. Отбор и выделение признаков. Методы выделения признаков (feature extraction). Метод главных компонент (PCA). Метод независимых компонент (ICA). Методы основанные на автоэнкодерах. Методы отбора признаков. Метод mRMR. Методы основанные на взаимной корреляции признаков. Методы основанные на деревьях решений.
 
@@ -83,4 +83,4 @@
 
 [haykin] Neural Networks and Learning Machines // Simon O.Haykin (http://www.ib.cnea.gov.ar/~redneu/2013/BOOKS/Haykin.pdf)
 
-[Peng] Feature selection based on mutual information: criteria of max-dependency, max-relevance, and min-redundancy (http://penglab.janelia.org/papersall/docpdf/2005_TPAMI_FeaSel.pdf)
+[Peng] Feature selection based on mutual information: criteria of max-dependency, max-relevance, and min-redundancy // Hanchuan Peng, Fuhui Long, Chris Ding (http://penglab.janelia.org/papersall/docpdf/2005_TPAMI_FeaSel.pdf)
