@@ -19,14 +19,19 @@
 \setbeamercolor{frametitle}{fg=black}
 \setbeamerfont*{title}{family=\sffamily,size=\LARGE}
 
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+\setbeamertemplate{footline}[frame number]
+\let\otp\titlepage
+\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+
 \setbeamertemplate{background canvas}{%
-	\ifnumequal{\c@framenumber}{1}{%
+	\ifnumequal{\c@framenumber}{0}{%
       \includegraphics[width=\paperwidth,height=\paperheight]{images/cover.png}
    }{%
       \ifnumequal{\c@framenumber}{\inserttotalframenumber}{
          \includegraphics[width=\paperwidth,height=\paperheight]{images/back.png}
       }{%
-         % Other frames         
+         % Other frames
       }%
    }%
 }
@@ -37,10 +42,10 @@
 
 \author{Николай Анохин}
 \title{\newline \newline \newline Лекция 1 \\ Очень очень очень и даже слишком \\ длинное название лекции}
- 
+
 \begin{document}
 
-\begin{frame}{}
+\begin{frame}[plain]
 \titlepage
 \end{frame}
 
@@ -86,7 +91,7 @@ g(x),\quad\text{иначе}
 
 \end{frame}
 
-\begin{frame}{}
+\begin{frame}[plain]
 \begin{center}
 {\Large Вопросы}
 \end{center}
