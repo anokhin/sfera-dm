@@ -194,6 +194,254 @@ Data-
 
 \end{frame}
 
+\begin{frame}{Fail (Программа TIA)}
+
+\begin{itemize}
+\item Наблюдаем $10^9$ человек
+\item Человек в среднем посещает отель раз в $100$ дней
+\item Есть $10^5$ отелей на $100$ человек каждый
+\item Проверим посещения за $1000$ дней 
+\end{itemize}
+
+Вероятность для конкретной пары встретиться в отеле в конкретный день:
+\[
+p_1 = \left(\frac{1}{100}\right)^2 \cdot 10^{-5} = 10^{-9}
+\]
+Всего пар людей
+\[
+n_{pp} = C^{10^9}_2 \approx \frac{(10^9)^2}{2} = 5 \cdot 10^{17}
+\]
+а пар дней
+\[
+n_{pd} = C^{10^3}_2 \approx \frac{(10^3)^2}{2} = 5 \cdot 10^{5}
+\]
+Ожидаемое количество ``подозрительных'' встреч в отелях
+\[
+N = p_1^2 n_{pp} n_{pd} = 250000 >> 10
+\]
+
+\end{frame}
+
+\begin{frame}{Принцип Бонферрони}
+
+Вычислить количество рассматриваемых событий при предположении их полной случайности. Если это количество намного превосходит количество событий, о котором идет речь в задаче, полученные результаты нельзя будет считать достоверными.
+
+\end{frame}
+
+% =======================
+\section{Процесс Data Mining}
+% =======================
+
+\begin{frame}{Cross Industry Standard Process for Data Mining}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    	CRISP-DM   	
+    	\begin{itemize}
+    		\item SPSS 
+    		\item Teradata 
+   			\item Daimler AG 
+    		\item NCR Corporation 
+    		\item OHRA
+    		\item IBM
+		\end{itemize}
+		
+		Другие процессы: KDD, SEMMA 	
+    \end{column}
+    %   
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    {\it Задача:} на рыболовном предприятии автоматизировать сортировку улова
+    \begin{figure}
+        \centering
+        \begin{subfigure}[b]{\textwidth}
+                \includegraphics[width=0.9\textwidth]{images/seabass.jpg}
+                \caption{Сибас}                
+        \end{subfigure}
+            
+        \begin{subfigure}[b]{\textwidth}
+                \includegraphics[width=0.9\textwidth]{images/salmon.jpg}
+                \caption{Лосось}     
+        \end{subfigure}
+	\end{figure}    
+    \end{column}
+    %
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp-bu.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Признаки}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    $\mathcal{D}$ -- множество объектов (data set) \\
+    $d \in \mathcal{D}$ -- обучающий объект \\
+    $\phi_j: D \rightarrow F_j$ -- признак
+    
+    \vspace{1em}
+    Виды признаков
+    \begin{itemize}
+    \item Бинарные/Binary \\ $F_j = \{true, false\}$
+	\item Номинальные/Categorical \\ $F_j$ -- конечно
+	\item Порядковый/Ordinal \\ $F_j$ -- конечно, упорядочено
+	\item Количественный/Numerical \\ $F_j = \mathbb{R}$
+    \end{itemize}
+    \vspace{1em}
+    Представление $d_i$
+    \[
+    \mathbf{x}_i = (\phi_1(d_i), \ldots, \phi_n(d_i)) \in \mathcal{X}
+    \]
+
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp-du.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    \begin{itemize}
+		\item Удаление шума
+		\item Заполнение отсутствующих значений
+		\item Трансформация факторов
+		\item Выбор факторов
+		\item Использование априорных знаний
+	\end{itemize}
+	\vspace{1em}
+	В итоге:\\
+	\[
+	X = \begin{pmatrix}
+	\mathbf{x_1} \\
+	\ldots \\
+	\mathbf{x_N} \\
+	\end{pmatrix}, \;\; x_i \in \mathcal{X}
+	\]
+	\[
+	Y = \begin{pmatrix}
+	y_1 \\
+	\ldots \\
+	y_N \\
+	\end{pmatrix}, \;\; y_i \in \mathcal{Y}
+	\]
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp-dp.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    \begin{block}{Модель}
+    семейство параметрических функций вида
+    \[
+    H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \}
+    \]    
+    \end{block}
+    \begin{block}{Алгоритм обучения}
+    выбор наилучших параметров $\theta^*$
+    \[
+    A(X, Y): (\mathcal{X} \times \mathcal{Y})^N \rightarrow \Theta
+    \]    
+    \end{block}
+    В итоге:
+    \[
+    h^*(\mathbf{x}) = h(\mathbf{x}, \theta^*)
+    \]
+    		
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp-m.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+
+	\begin{itemize}
+	\item точность или аппроксимация?
+	\item bias или variance?
+	\item интерпретируемость или качество?
+	\end{itemize}    
+    	
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp-e.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    	
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp-d.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% =======================
+\section{Exploratory data analysis}
+% =======================
+
+\begin{frame}{Exploratory data analysis}
+EDA направлен на детальное изучение данных, и необходим для понимания, с чем мы собственно работаем. Важной частью является сбор и очистка данных и сам выбор какие данные собирать. Особенность метода состоит в визуализации и поиске важных характеристик и тенденций.
+\end{frame}
+
 \begin{frame}[plain]
 \begin{center}
 {\Large Вопросы}
