@@ -12,6 +12,7 @@
 \usepackage{etoolbox}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{pifont}
 
 \makeatletter
 
@@ -66,7 +67,9 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 \tableofcontents
 \end{frame}
 
-\section{Структура курса} % =============================================
+% =======================
+\section{Структура курса}
+% =======================
 
 \begin{frame}{Структура курса}
 
@@ -118,6 +121,76 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 \end{itemize}
 
 Ваши правила?
+
+\end{frame}
+
+% =======================
+\section{Что такое Data Mining}
+% =======================
+
+\begin{frame}{DM как KDD}
+
+\begin{block}{Data Mining}
+Процесс извлечения знаний из различных источников данных, таких как базы данных, текст, картинки, видео и т.д. Полученные знания должны быть {\it достоверными}, {\it полезными} и {\it интерпретируемыми}.
+\end{block}
+
+\end{frame}
+
+\begin{frame}{DM как моделирование}
+
+\begin{block}{Data Mining}
+Процесс построения модели, хорошо описывающей закономерности, которые порождают данные.
+\end{block}
+
+\vspace{1em}
+Подходы к построению моделей
+\begin{itemize}
+\item[\color{green}\ding{52}] cтатистический
+\item[\color{green}\ding{52}] на основании машинного обучения
+\item[\color{red}\ding{54}] вычислительный
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{DM и DS}
+
+\begin{block}{Data Scientist}
+Person who is better at statistics than any software engineer and better at software engineering than any statistician \\ (J. Wills, Data Scientist at Cloudera Inc.)
+\end{block}
+
+\vspace{1em}
+Data-
+\begin{itemize}
+\item[\color{red}\ding{54}] -architecture
+\item[\color{red}\ding{54}] -acquisition
+\item[\color{green}\ding{52}] -analysis
+\item[\color{red}\ding{54}] -archiving
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Success stories}
+
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{images/google.png}
+                \caption{Google}                
+        \end{subfigure}%        
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{images/linkedin.png}
+                \caption{LinkedIn}     
+        \end{subfigure}
+        
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{images/delay.png}
+                \caption{KnowDelay}                
+        \end{subfigure}%        
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=0.9\textwidth]{images/digits.png}
+                \caption{Handwritten digits}
+        \end{subfigure}
+\end{figure}
 
 \end{frame}
 
