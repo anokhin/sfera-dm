@@ -13,6 +13,9 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{pifont}
+\usepackage{xcolor}
+\usepackage{framed}
+\definecolor{shadecolor}{cmyk}{0,0,0,1}
 
 \makeatletter
 
@@ -103,6 +106,10 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 \begin{block}{ДЗ}
 4 домашних задания на 6-8 часов самостоятельной работы каждое (4x15 баллов)
 \end{block}
+
+\begin{center}
+\includegraphics[scale=0.28]{images/hw.png}
+\end{center}
 
 \begin{alertblock}{Экзамен}
 Презентация и защита семестрового проекта \\ (40 баллов)
@@ -229,7 +236,7 @@ N = p_1^2 n_{pp} n_{pd} = 250000 >> 10
 \end{frame}
 
 % =======================
-\section{Процесс Data Mining}
+\section{Унификация процесса Data Mining}
 % =======================
 
 \begin{frame}{Cross Industry Standard Process for Data Mining}
@@ -439,7 +446,96 @@ N = p_1^2 n_{pp} n_{pd} = 250000 >> 10
 % =======================
 
 \begin{frame}{Exploratory data analysis}
-EDA направлен на предварительное изучение данных Важной частью является сбор и очистка данных и сам выбор какие данные собирать. Особенность метода состоит в визуализации и поиске важных характеристик и тенденций.
+
+EDA направлен на предварительное изучение данных
+\begin{itemize}
+\item формироваие гипотез относително структуры данных
+\item выбор необходимых инструментов анализа
+\end{itemize}
+Особенность метода состоит в визуализации и поиске важных характеристик и тенденций
+
+\end{frame}
+
+\begin{frame}{Примеры}
+
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/plot.png}
+                \caption{Plot}                
+        \end{subfigure}%        
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/scatter.png}
+                \caption{Scatter}     
+        \end{subfigure}
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/bar.png}
+                \caption{Barplot}     
+        \end{subfigure}
+        
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/pie.png}
+                \caption{Piechart}                
+        \end{subfigure}%        
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/heatmap.png}
+                \caption{Heatmap}     
+        \end{subfigure}
+        \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/box.png}
+                \caption{Boxplot}     
+        \end{subfigure}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Полезные советы}
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}    	
+    	\begin{itemize}
+		\item Все познается в сравнении
+		\item Причинно-следственные связи
+		\item Размерность имеет значение (больше-лучше)
+		\end{itemize}	
+    \end{column}
+    %   
+    \begin{column}{.5\textwidth}
+    \begin{itemize}
+		\item Не избегать пояснений
+		\item Content is king
+		\end{itemize}		
+    \end{column}
+  \end{columns}
+  
+  \begin{center}
+   		\includegraphics[width=0.8\textwidth]{images/salaries.png}
+    \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{Задача}
+
+{\bf Дано:} информация о посещении пользователями интернет-сайтов \\
+{\bf Требуется:} исследовать распределение количества уникальных пользователей в зависимости от популярности сайта
+
+\vspace{1em}
+Пошаговая инструкция
+\begin{enumerate}
+\item Скачать файл с данными (400M) \url{http://bit.ly/1xdOrHD}
+\item Скачать и запустить шаблон кода на python \url{http://bit.ly/1B6fEcO}
+\begin{shaded}
+{\color{green} \begin{verbatim}
+$ python eda.py -h
+$ python eda.py -n 20 eda.dat
+\end{verbatim}}
+\end{shaded}
+\item Заполнить функцию \textsf{top\_domain\_user\_counts}
+\item Заполнить функцию \textsf{plot\_log\_top\_domains} и посмотреть на распределение в log-log шкале
+\item Заполнить функцию \textsf{plot\_linear\_model}, попутно осознав параметры модели
+\item Выписать полученное распределение $n_{users}(rank)$
+\end{enumerate}
+
 \end{frame}
 
 \begin{frame}[plain]
