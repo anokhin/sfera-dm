@@ -1,0 +1,124 @@
+\documentclass[10pt]{beamer}
+
+\usetheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{etoolbox}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pifont}
+\usepackage{xcolor}
+\usepackage{framed}
+\definecolor{shadecolor}{cmyk}{0,0,0,1}
+
+\makeatletter
+
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamerfont*{title}{family=\sffamily,size=\LARGE}
+
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+\setbeamertemplate{footline}[frame number]
+\let\otp\titlepage
+\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+
+\setbeamertemplate{background canvas}{%
+	\ifnumequal{\c@framenumber}{0}{%
+      \includegraphics[width=\paperwidth,height=\paperheight]{images/cover.png}
+   }{%
+      \ifnumequal{\c@framenumber}{\inserttotalframenumber}{
+         \includegraphics[width=\paperwidth,height=\paperheight]{images/back.png}
+      }{%
+         % Other frames
+      }%
+   }%
+}
+
+\makeatother
+
+\beamertemplatenavigationsymbolsempty
+
+\author{Николай Анохин}
+\title{\newline \newline \newline Лекция 1 \\ Задачи Data Mining}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{План занятия}
+\tableofcontents
+\end{frame}
+
+% =======================
+\section{Задача кластеризации}
+% =======================
+
+\begin{frame}{Задача кластеризации}
+
+В задачах кластеризации целевая переменная не задана. Цель -- отыскать ``скрытую структуру'' данных.
+
+\vspace{1em}
+Зачем вообще рассматривать задачи без целевой переменной?
+\begin{enumerate}
+\item разметка данных -- дорогое удовольствие
+\item можно сначала поделить, а потом разметить
+\item возможность отслеживать эволюционные изменения
+\item построение признаков
+\item exploratory data analysis
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Пример 1}
+
+\end{frame}
+
+\begin{frame}{Пример 2}
+
+\end{frame}
+
+\begin{frame}{Топ 1000 самых посещаемых доменов рунета}
+
+T-SNE + DBSCAN
+
+\end{frame}
+
+\begin{frame}{Постановка задачи}
+
+{\bf Дано.} $N$ обучающих $D$-мерных объектов $\mathbf{x}_i \in \mathcal{X}$, образующих тренировочный набор данных (training data set) $X$.
+
+\vspace{1em}
+{\bf Найти.} Модель $h^*(\mathbf{x})$ из семейства параметрических функций $H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mathbb{N}\}$, ставящую в соответствие произвольному $\mathbf{x} \in \mathcal{X}$ один из $K$ кластеров так, чтобы объекты внутри одного кластера были похожи, а объекты из разных кластеров различались.
+
+\vspace{1em}
+\begin{itemize}
+\item Как определить похожесть объектов?
+\item Как оценить качество модели?
+\item Как выбрать $K$?
+\end{itemize}
+
+\end{frame}
+
+% =======================
+\section{Статистический подход: смесь распределений}
+% =======================
+
+\begin{frame}{Многомерное нормальное распределение}
+
+\end{frame}
+
+\begin{frame}[plain]
+\begin{center}
+{\Large Вопросы}
+\end{center}
+\end{frame}
+
+\end{document}
