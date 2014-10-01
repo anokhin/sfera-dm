@@ -16,6 +16,22 @@
 \usepackage{xcolor}
 \usepackage{framed}
 \definecolor{shadecolor}{cmyk}{0,0,0,1}
+\usepackage{listings}
+
+\lstset{
+	backgroundcolor=\color{lightgray},
+	commentstyle=\color{blue},
+	frame=single
+	breakatwhitespace, 
+	language=python, 
+	columns=fullflexible, 
+	keepspaces, 
+	breaklines, 
+	tabsize=3, 
+	showstringspaces=false, 
+	extendedchars=true,
+	numbers=left
+}
 
 \makeatletter
 
@@ -48,6 +64,25 @@
 \title{\newline \newline \newline Лекция 1 \\ Задачи Data Mining}
 
 \begin{document}
+
+\defverbatim[colored]\kmeans{%
+\begin{lstlisting}[tabsize=4,basicstyle=\ttfamily]
+function kmeans(X, K):
+	initialize N # number of objects
+	initialize Mu = (mu_1 ... mu_K) # random centroids
+	do:
+		# E step
+		for k in 1..K:
+			for x in 1..N:
+				compute r_nk # Cluster assignment
+		# M step
+		for k in 1..K:
+			recompute mu_k # Update centroids
+	until Mu converged
+	J = loss(X, Mu)
+	return Mu, J
+\end{lstlisting}
+}
 
 \begin{frame}[plain]
 \titlepage
@@ -143,22 +178,44 @@ T-SNE + DBSCAN
 \]
 \begin{figure}
         \centering
-        \begin{subfigure}[b]{0.24\textwidth}
+        \begin{subfigure}[b]{0.23\textwidth}
                 \includegraphics[width=\textwidth]{images/multi.png}
                 \caption{$D = 2$}                
         \end{subfigure}    
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\textwidth]{images/multi.png}
+        \begin{subfigure}[b]{0.23\textwidth}
+                \includegraphics[width=\textwidth]{images/gnormal.png}
                 \caption{}     
-        \end{subfigure}        
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\textwidth]{images/multi.png}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.23\textwidth}
+                \includegraphics[width=\textwidth]{images/dnormal.png}
                 \caption{$\mathbf{\Sigma} = \text{diag}(\sigma_i)$}
         \end{subfigure}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\textwidth]{images/multi.png}
+        \begin{subfigure}[b]{0.23\textwidth}
+                \includegraphics[width=\textwidth]{images/enormal.png}
                 \caption{$\mathbf{\Sigma} = \sigma I$}
         \end{subfigure}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Old Faithful data set}
+
+\begin{quote}
+D = date of recordings in month (in August) \\
+X = duration of the current eruption in minutes \\
+Y = waiting time until the next eruption in minutes \\
+\end{quote}
+
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.33\textwidth}
+                \includegraphics[width=\textwidth]{images/of1.jpg}
+                \caption{Yellowstone Park}                
+        \end{subfigure}    
+        \begin{subfigure}[b]{0.6\textwidth}
+                \includegraphics[width=\textwidth]{images/of2.png}
+                \caption{}
+        \end{subfigure}        
 \end{figure}
 
 \end{frame}
@@ -196,7 +253,7 @@ p(\mathbf{x}) = \sum_k \pi_k \mathcal{N}(\mathbf{x} | \mathbf{\mu}_k, \mathbf{\S
 \begin{frame}{Maximum Likelihood (!)}
 
 \begin{block}{ML принцип}
-Сформулировать принцип тут
+Пусть дано семейство параметрических моделей $h(\mathbf{x}, \mathbf{\theta})$. Выбираем вектор параметров $\theta$, максимизирующий функцию правдоподобия (likelihood) $p(\mathcal{D} | \theta)$, соответствующую рассматриваемому семейству моделей.
 \end{block}
 
 \vspace{1em}
@@ -307,12 +364,24 @@ E_\mathbf{Z}[\ln p(\mathbf{X}, \mathbf{Z} | \mu, \Sigma, \pi)] \rightarrow -\sum
 
 \begin{frame}{K-means}
 
+\kmeans
+Сложность $O(NK)$ \\
+Локальная оптимизация (!)
+
 \end{frame}
 
 \begin{frame}{}
 
 \begin{center}
 \includegraphics[scale=0.35]{images/kmeans.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Задача}
+
+\begin{center}
+\includegraphics[height=0.9\textheight]{images/problem.pdf}
 \end{center}
 
 \end{frame}
@@ -466,6 +535,54 @@ J &=& \sum_{k=1}^K \sum_{\mathbf{x}_i \in C_k} \| \mathbf{x}_i - \mathbf{m}_k \|
 \end{block}
 
 \end{frame}
+
+\begin{frame}{Качество кластеризации}
+
+\begin{block}{Задача}
+Пусть дана обучающая выборка, для которой правильная кластеризация $C$ известна. С помощью выбранного алгоритма получена кластеризация $K$. Проверить, насколько $K$ совпадает с $C$.
+\end{block}
+
+\begin{itemize}
+\item Rand Index \\
+{\it \small
+$a$ -- кол-во пар объектов, попавших в один кластер и в $C$, и в $K$ \\
+$b$ -- кол-во пар объектов, попавших в разные кластеры и в $C$, и в $K$
+\[
+RI = \frac{a+b}{C^N_2}
+\]
+}
+\item Mutual Information \\
+{\it \small
+\[
+MI = \sum_{c \in C} \sum_{k \in K} p(c, k) \log \frac{p(c, k)}{p(k)p(c)}
+\]
+}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Задача}
+
+{\bf Дано:} Сгенерированная смесь из гауссовских распределений \\
+{\bf Требуется:} Исследовать стабильность и чувствительность к линейным преобразованиям алгоритма k-means
+
+\vspace{1em}
+Пошаговая инструкция
+\begin{enumerate}
+\item Скачать и запустить шаблон кода на python \url{http://bit.ly/1yyVTyw}
+\begin{shaded}
+{\color{green} \begin{verbatim}
+$ python kmeans.py -h
+$ python kmeans.py 
+\end{verbatim}}
+\end{shaded}
+\item Заполнить функцию \textsf{rand\_index} \\ Меняется ли rand от запуска к запуску?
+\item Дописать функцию \textsf{cluster\_data} \\ Реализовать N-times random restart
+\item Как меняется результат, если применить к данным различные линейные преобразования?
+\end{enumerate}
+
+\end{frame}
+
 
 \begin{frame}[plain]
 \begin{center}

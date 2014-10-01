@@ -1,0 +1,20 @@
+\frametitle{Задача}
+
+{\bf Дано:} Сгенерированная смесь из гауссовских распределений \\
+{\bf Требуется:} Исследовать стабильность и чувствительность к линейным преобразованиям алгоритма k-means
+
+\vspace{1em}
+Пошаговая инструкция
+\begin{enumerate}
+\item Скачать и запустить шаблон кода на python \url{http://bit.ly/1yyVTyw}
+\begin{shaded}
+{\color{green} \begin{verbatim}
+$ python kmeans.py -h
+$ python kmeans.py
+\end{verbatim}}
+\end{shaded}
+\item Заполнить функцию \textsf{rand\_index} \\ Меняется ли rand от запуска к запуску?
+\item Дописать функцию \textsf{cluster\_data} \\ Реализовать N-times random restart
+\item Как меняется результат, если применить к данным различные линейные преобразования?
+\end{enumerate}
+
