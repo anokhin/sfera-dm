@@ -81,3 +81,4 @@ docs/_build/
 *.synctex.gz
 *.snm
 *.nav
+*.vrb
