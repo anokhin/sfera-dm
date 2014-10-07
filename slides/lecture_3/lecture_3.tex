@@ -169,19 +169,56 @@ function expand_cluster(x, nbr, C, eps, min_pts, NV):
 
 \begin{frame}{MAP}
 
-Maximum A-Posteriori \& Bayesian Inference
+\begin{block}{Maximum A-Posteriori}
+сформулировать MAP принцип
+\end{block}
+
+\vspace{1em}
+Предположения
+\begin{enumerate}
+\item Количество кластеров $K$ задано
+\item Априорные вероятности кластеров заданы $P(c_j), \;\; \forall j \in 1,\ldots,K$
+\item Распределение $\mathbf{x}$ в зависимости от клаcтера $c_j$ и параметров $\theta_j$ известны $p(\mathbf{x} | c_j, \theta_j)$
+\item Априорное распределение параметров $p(\theta)$ задано
+\item Дан обучающий набор данных $\mathcal{D}$, состоящий из $n$ объектов $\mathbf{x}$, независимо выбранных из распределения
+\[
+p(\mathbf{x} | \theta) = \sum_{j=1}^K P(c_j) p(\mathbf{x} | c_j, \theta_j)
+\]
+\end{enumerate}
 
 \end{frame}
 
 \begin{frame}{Байесовская кластеризация}
 
-$p(\omega_j | \mathbf{x})$
+{\bf Дано.} \underline{$P(c_j)$}, \underline{$p(\mathbf{x} | c_j, \theta_j)$}, $p(\theta)$, $p(\mathbf{x} | \theta)$ \\
+{\bf Найти.} $p(c_j | \mathbf{x})$
+
+\[
+p(c_j | \mathbf{x}, \mathcal{D}) = \frac{p(c_j | \mathcal{D}) p(\mathbf{x} | c_j, \mathcal{D})}{\sum_{i=1}^K p(c_i | \mathcal{D}) p(\mathbf{x} | c_i, \mathcal{D})} =
+\]
+\[
+= \frac{P(c_j) \int p(\mathbf{x} | c_j, \theta_j) p(\theta | \mathcal{D}) d \theta}{\sum_{i=1}^K P(c_i) \int p(\mathbf{x} | c_i, \theta_i) p(\theta | \mathcal{D}) d \theta} =
+\]
+
+{\bf Неизвестно.} $p(\theta | \mathcal{D})$
 
 \end{frame}
 
-\begin{frame}{Байесовская кластеризация}
+\begin{frame}{Апостериорное распределение параметров}
 
-$p(\mathbf{\theta} | \mathcal{D})$
+{\bf Дано.} \underline{$P(c_j)$}, \underline{$p(\mathbf{x} | c_j, \theta_j)$}, \underline{$p(\theta)$}, \underline{$p(\mathbf{x} | \theta)$} \\
+{\bf Найти.} $p(\theta | \mathcal{D})$
+
+\[
+p(\mathbf{\theta} | \mathcal{D}) = \frac{p(\theta) p(\mathcal{D} | \theta)}{\int p(\theta) p(\mathcal{D} | \theta) d \theta} =
+\]
+\[
+= \frac{p(\theta) \prod_{k=1}^n p(\mathbf{x}_k | \theta)}{\int p(\theta) \prod_{k=1}^n p(\mathbf{x}_k | \theta) d \theta}
+\]
+Итеративное обновление $\theta$
+\[
+p(\mathbf{\theta} | \mathcal{D}^n) = \frac{p(\mathbf{x}_n | \theta) p(\mathbf{\theta} | \mathcal{D}^{n-1})}{\int p(\mathbf{x}_n | \theta) p(\mathbf{\theta} | \mathcal{D}^{n-1}) d \theta}
+\]
 
 \end{frame}
 
