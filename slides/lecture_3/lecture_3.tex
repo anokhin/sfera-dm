@@ -149,10 +149,10 @@ function expand_cluster(x, nbr, C, eps, min_pts, NV):
 \vspace{1em}
 Что мы уже изучили
 \begin{itemize}
-\item Maximum Likelihood principle
-\item Expectation Maximization \& Gaussian Mixture
-\item K-Means и модификации
-\item Различные виды функций расстояния/схожести
+\item принцип Maximum Likelihood
+\item алгоритм Expectation Maximization
+\item смесь нормальных распределений и k-means
+\item различные виды функций расстояния/схожести
 \end{itemize}
 
 \end{frame}
@@ -169,8 +169,8 @@ function expand_cluster(x, nbr, C, eps, min_pts, NV):
 
 \begin{frame}{MAP}
 
-\begin{block}{Maximum A-Posteriori}
-сформулировать MAP принцип
+\begin{block}{Maximum a posteriori}
+Пусть дано семейство параметрических моделей $h(\mathbf{x}, \mathbf{\theta})$. Вычисляем апостериорное распределение $p(\theta | \mathcal{D})$. В качестве оптимального $\theta$ выбираем моду этого распределения.
 \end{block}
 
 \vspace{1em}
@@ -224,7 +224,24 @@ p(\mathbf{\theta} | \mathcal{D}^n) = \frac{p(\mathbf{x}_n | \theta) p(\mathbf{\t
 
 \begin{frame}{Байесовская кластеризация}
 
-плюсы-минусы
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    	\begin{itemize}
+		\item при равномерном $p(\theta)$ $MAP = ML$
+		\item для больших наборов данных $MAP \approx ML$
+		\item для маленьких наборов данных $MAP$ лучше $ML$
+		\item при $MAP$ доверительные интервалы из коробки
+		\item $ML$ обычно проще реализовать
+		\end{itemize}
+    \end{column}
+    %   
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/map.png}
+    \end{center}
+    \end{column}
+  \end{columns}
 
 \end{frame}
 
@@ -253,18 +270,18 @@ Divisive
 
 \end{frame}
 
-\begin{frame}{Дендрограмма}
+\begin{frame}{Радиальная дендрограмма \href{http://itol.embl.de/}{(источник)}} 
 
 \begin{center}
-\includegraphics[scale=0.3]{images/dendro.png}
+\includegraphics[scale=0.3]{images/radial.png}
 \end{center}
 
 \end{frame}
 
-\begin{frame}{Радиальная дендрограмма}
+\begin{frame}{Дендрограмма}
 
 \begin{center}
-\includegraphics[scale=0.3]{images/radial.png}
+\includegraphics[scale=0.3]{images/dendro.png}
 \end{center}
 
 \end{frame}
@@ -361,9 +378,12 @@ d_e(C_i, C_j) = \sqrt{\frac{n_i n_j}{n_i + n_j}} \|\mathbf{m}_i -\mathbf{m}_j \|
 \item Кластеры -- участки высокой плотности, разделенные участками низкой плотности
 \end{itemize}
 
+\vspace{1em}
 \begin{center}
-\includegraphics[scale=0.6]{images/dbscan.jpg}
+\includegraphics[height=0.4\textheight]{images/dbscan1.png}
+\includegraphics[height=0.4\textheight]{images/dbscan2.png}
 \end{center}
+\href{http://biarri.com/spatial-clustering-in-c-post-2-of-5-running-dbscan/}{(источник)}
 
 \end{frame}
 
@@ -430,6 +450,14 @@ d_e(C_i, C_j) = \sqrt{\frac{n_i n_j}{n_i + n_j}} \|\mathbf{m}_i -\mathbf{m}_j \|
 
 \end{frame}
 
+\begin{frame}{Викторина}
+
+\begin{center}
+\includegraphics[height=0.8\textheight]{images/quiz.png}
+\end{center}
+
+\end{frame}
+
 % ============================================== %
 
 \section{Выбор количества кластеров}
@@ -472,6 +500,35 @@ silhouette(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}
 \end{frame}
 
 \begin{frame}{Кластеризация. Что дальше}
+
+\begin{itemize}
+\item Графо-теоретические методы (affinity propagation, mcl, etc.)
+\item Снижение размерности (SOM, PCA, etc.)
+\item Бесконечномерные смеси (Dirichlet process)
+\end{itemize}
+
+\begin{center}
+\includegraphics[height=0.6\textheight]{images/graph.jpg}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{Задача}
+
+Кластеризовать фотографии с футбольных матчей. Ожидается что фотографии игроков одной команды окажутся в одном кластере.
+
+\begin{itemize}
+\item Скачать данные и шаблон кода \url{http://bit.ly/1uALLl4}
+\item Запустить код и интерпретировать дендрограмму
+\begin{shaded}
+{\color{green} \begin{verbatim}
+python football/football.py football/img/
+\end{verbatim}}
+\end{shaded}
+При $K=3$ сколько ошибок дает алгоритм?
+\item Поэкспериментировать с разными видами расстояния между кластерами (-l). Какой из них дает наилучший результат?
+\item Реализовать критерии выбора количества кластеров: diameter и silhouette. Какое число кластеров рекомендует каждый из критериев?
+\end{itemize}
 
 \end{frame}
 
