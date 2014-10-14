@@ -16,6 +16,7 @@
 \usepackage{xcolor}
 \usepackage{framed}
 \definecolor{shadecolor}{cmyk}{0,0,0,1}
+\usepackage{multirow}
 
 \makeatletter
 
@@ -76,8 +77,6 @@
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Регрессия: интуиция}
 
 \begin{block}{Задача}
@@ -95,9 +94,43 @@
 
 \begin{frame}{Постановка задачи}
 
+Пусть дан набор объектов $\mathcal{D} = \{(\mathbf{x}_i, y_i)\},
+\; \mathbf{x}_i \in \mathcal{X},
+\; y_i \in \mathcal{Y},
+\; i \in 1, \ldots, N$, полученный из неизвестной закономерности $y = f(\mathbf{x})$. Необходимо выбрать из семейства параметрических функций
 \[
-	H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \}
+H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \}
 \]
+такую $h^*(\mathbf{x}) = h(\mathbf{x}, \theta^*)$, которая наиболее точно апроксимирует $f(\mathbf{x})$.
+
+\vspace{1em}
+Задачи
+\begin{itemize}
+\item Классификация: $|\mathcal{Y}| < C$
+\item Регрессия: $\mathcal{Y} = \mathbb{R}$
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Как решать}
+
+\begin{enumerate}
+
+\item[M] Выдвигаем гипотезу насчет {\bf модели} - семейства параметрических функций вида
+\[
+H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \},
+\]
+которая могла бы решить нашу задачу (model selection)
+
+\item[L] Выбираем наилучшие параметры модели $\theta^*$, используя {\bf алгоритм обучения}
+\[
+A(X, Y) : (\mathcal{X}, \mathcal{Y})^N \rightarrow \Theta
+\]
+(learning/inference)
+
+\item[D] Используя полученную модель $h^*(x) = h(x, \theta^*)$, классифицируем неизвестные объекты (decision making)
+
+\end{enumerate}
 
 \end{frame}
 
@@ -105,7 +138,135 @@
 \section{Подходы к моделированию}
 % ========================================
 
-\begin{frame}{}
+\begin{frame}{Виды моделей}
+
+{\bf Генеративные модели.} Смоделировать $p(x | C_k)$ и $p(C_k)$, применить теорему Байеса
+\[
+p(C_k | x) = \frac{p(x | C_k) p(C_k)}{p(x)}
+\]
+и использовать $p(C_k | x)$ для принятия решения \\ (NB, Bayes Networks, MRF)
+\vspace{1em}
+
+{\bf Дискриминативные модели.} Смоделировать $p(C_k | x)$ и использовать ее для принятия решения \\ (Logistic Regression, Decision Trees)
+\vspace{1em}
+
+{\bf Функции решения.} Смоделировать напрямую $h^*(x): \mathcal{X} \rightarrow \mathcal{Y}$ \\ (Linear Models, Neural Networks)
+
+\end{frame}
+
+\begin{frame}{Вероятностные модели VS Функции решения}
+
+\begin{itemize}
+
+\item Отказ от классификации (reject option)
+\item Дисбаланс в выборке
+\item Ансамбли моделей
+\item Сильные предположения о природе данных
+\item Излишняя (вычислительная) сложность
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Байесовский подход к моделированию}
+
+\end{frame}
+
+\begin{frame}{Обучение модели}
+
+\begin{quote}
+\[
+LEARNING = representation + evaluation + optimization
+\]
+\hfill Pedro Domingos
+\end{quote}
+
+Evaluation -- критерий, который оптимизируем
+\begin{itemize}
+\item эмпирический риск $\rightarrow \min$
+\item KL-дивергенция $\rightarrow \min$
+\item функция правдоподобия $\rightarrow \max$
+\item information gain $\rightarrow \max$
+\end{itemize}
+Optimization -- как оптимизируем
+\begin{itemize}
+\item unconstrained (GD, Newton+)
+\item constrained (linear programming, quadratic programming)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Эмпирический риск}
+
+{\bf Функция потерь} $\mathcal{L}(\mathbf{x}, y, \theta)$ - ошибка, которую для данного $\mathbf{x}$ дает модель $h(\mathbf{x}, \theta)$ по сравнению с реальным значением $y$
+\vspace{1em}
+
+{\bf Эмпирический риск} -- средняя ошибка на обучающей выборке
+\[
+Q(X, Y, \theta) = \frac{1}{N} \sum_{n=1}^N \mathcal{L}(\mathbf{x}_n, y_n, \theta)
+\]
+\vspace{1em}
+
+{\bf Задача} -- найти значение $\theta^*$, минимизирующее эмпирический риск
+\[
+\theta^* = \theta^*(X, Y) = \text{argmin}_\theta Q(X, Y, \theta)
+\]
+
+\end{frame}
+
+\begin{frame}{Некоторые функции потерь}
+
+\begin{itemize}
+\item Индикатор ошибки
+\[
+\mathcal{L}(\mathbf{x}, y, \theta) = 0 \text{\;if\;} h(\mathbf{x}, \theta) = y \text{\;else\;} 1
+\]
+\item Функция Минковского 
+\[
+\mathcal{L}(\mathbf{x}, y, \theta) = |y - h(\mathbf{x}, \theta)|^q
+\]
+Частные случаи: квадратичная $q = 2$, абсолютная ошибка $q = 1$
+\item Hinge
+\[
+\mathcal{L}(\mathbf{x}, y, \theta) = \max(0, 1 - y \times h(\mathbf{x}, \theta))
+\]
+\item Информационная
+\[
+\mathcal{L}(\mathbf{x}, y, \theta) = - \log_2 p(y | \mathbf{x}, \theta)
+\]
+\begin{center}
+
+\end{center}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Проблема 1. Переобучение}
+
+\begin{block}{Задача}
+Аппроксимировать обучающую выборку полиномом $M$ степени
+\end{block}
+
+\begin{center}
+\includegraphics[scale=0.3]{images/m1.png}
+\includegraphics[scale=0.3]{images/m2.png}
+\includegraphics[scale=0.3]{images/m3.png}
+
+\includegraphics[scale=0.3]{images/of.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Проблема 2. Проклятие размерности}
+
+\begin{block}{Задача}
+Классифицировать объекты.
+\end{block}
+
+\begin{center}
+\includegraphics[scale=0.3]{images/pts.png}
+\includegraphics[scale=0.4]{images/curse.png}
+\end{center}
 
 \end{frame}
 
@@ -113,7 +274,68 @@
 \section{Теория принятия решений}
 % ========================================
 
-\begin{frame}{}
+\begin{frame}{ТПР -- Классификация}
+
+{\bf Пусть}
+
+$\mathcal{R}_k$ -- область, такая что все $x \in \mathcal{R}_k$ относим к $C_k$
+
+{\bf Дано}
+
+$R_{kj}$ -- риск, связанный с отнесением объекта класса $C_k$ к классу $C_j$
+
+{\bf Найти}
+
+$\forall k: \mathcal{R}_k$, такие, что математическое ожидание риска $E[R]$ минимально.
+
+\[
+E[R] = \sum_k \sum_j \int_{\mathcal{R}_j} R_{kj} p(C_k | x) p(x) dx
+\]
+
+\end{frame}
+
+\begin{frame}{Медицинская диагностика}
+
+Матрица риска $[R_{kj}]$
+
+\begin{center}
+\begin{tabular}{r | c c}
+ & sick & normal \\
+\hline
+sick & 0 & 10 \\
+normal & 1 & 0 
+\end{tabular}
+\end{center}
+
+Условные вероятности $p(C_k | x)$
+\[ 
+p(\mathtt{normal} | \mathtt{moving}) = 0.9, \; p(\mathtt{normal} | {\mathtt{not\;moving}}) = 0.3
+\]
+Вероятности $p(x)$
+\[
+p(\mathtt{moving}) = 0.7
+\]
+Требуется определить $\mathcal{R}_{\mathtt{sick}}$, $\mathcal{R}_{\mathtt{normal}}$
+
+\end{frame}
+
+\begin{frame}{ТПР -- Регрессия}
+
+Те же виды моделей: {\bf генеративные}, {\bf дискриминативные}, {\bf функция решения}
+\vspace{1em}
+
+Задана функция риска
+\[
+R(t, y(x))
+\]
+Математическое ожидание $E[R]$
+\[
+E[R] = \int \!\! \int R(t, y(x)) p(x, t) dx dt 
+\]
+Для квадратичной функции риска $R(t, y(x)) = [t - y(x)]^2$
+\[
+y(x) = E_t[t | x]
+\]
 
 \end{frame}
 
@@ -121,7 +343,173 @@
 \section{Оценка результатов классификации}
 % ========================================
 
-\begin{frame}{}
+\begin{frame}{Как оценить различные модели?}
+
+\begin{block}{Идея}
+использовать долю неверно классифицированных объектов \\ (error rate)
+\end{block}
+
+\begin{alertblock}{Важное замечание}
+error rate на обучающей выборке {\bf НЕ} является хорошим показателем качества модели
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Решение 1: разделение выборки}
+
+Делим обучающую выборку на {\bf тренировочную}, {\bf валидационную} и {\bf тестовую}
+
+\begin{center}
+\includegraphics[scale=0.15]{images/vtt.png}
+\end{center}
+  
+\end{frame}
+
+\begin{frame}{Решение 2: скользящий контроль}
+
+(n-times) (stratified) cross-validation
+
+\begin{center}
+\includegraphics[scale=0.15]{images/cv.png}
+\end{center}
+
+частный случай: leave-one-out
+  
+\end{frame}
+
+\begin{frame}{Решение 3: bootstrap}
+
+выбираем в тренировочную выбоку $n$ объектов с возвращением
+
+\begin{center}
+\includegraphics[scale=0.15]{images/boot.png}
+\end{center}
+
+упражнение: найти математическое ожидание размера тестовой выборки.
+  
+\end{frame}
+
+\begin{frame}{Доверительный интервал для success rate}
+
+При тестировании на $N=100$ объектах было получено $25$ ошибок. Таким образом измеренная вероятность успеха (success rate) составила $f=0.75$. Найти доверительный интервал для действительной вероятности успеха c уровнем доверия $\alpha=0.8$. 
+
+\begin{exampleblock}{Решение}
+Пусть $p$ -- действительная вероятность успеха в испытаниях бернулли, тогда
+\[
+f \sim \mathcal{N}\left( p, p(1-p)/N \right).
+\]
+Воспользовавшись табличным значением $P(-z \leq \mathcal{N}(0,1) \leq z) = \alpha$, имеем
+\[
+P\left(-z \leq \frac{f-p}{\sqrt{p(1-p)/N}} \leq z \right) = \alpha,
+\]
+откуда
+\[
+p \in \left(f + \frac{z^2}{2N} \pm z \sqrt{\frac f N - \frac{f^2}{N}+\frac{z^2}{4N^2}} \right)/\left(1 + \frac {z^2}{N} \right) = [0.69, 0.80]
+\]
+\end{exampleblock}
+  
+\end{frame}
+
+\begin{frame}{Метрики качества. Вероятностные модели.}
+
+Пусть $t_i$ - действительный класс для объекта $x_i$
+\begin{itemize}
+\item  Information loss 
+\[
+- \frac 1 N \sum_i \log_2 p(t_i | x_i)
+\]
+\item Quadratic loss 
+\[
+\frac 1 N \sum_j (p(t_j | x_i) - a_j(x_i))^2,
+\] 
+где
+\[
+a_j(x_i) = \begin{cases}
+1, \;\text{если}\;C_j = t_i\\
+0, \;\text{иначе}
+\end{cases} 
+\]
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Метрики качества. Функции решения.}
+
+\begin{center}
+\begin{tabular}{|c r | c c|}
+\cline{3-4}
+ \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{Предсказанный} \\
+ \cline{3-4}
+ \multicolumn{2}{c|}{} & {\bf true} & {\bf false} \\
+ \hline
+ \multirow{2}{*}{Действительный} & \multicolumn{1}{|c|}{\bf true} & TP & FN \\
+ & \multicolumn{1}{|c|}{\bf false}  & FP & TN \\
+ \hline
+\end{tabular}
+\end{center}
+
+\[
+success\;rate = accuracy = \frac{TP + TN}{TP + FP + FN + TN}
+\]
+\[
+recall = TPR = \frac{TP}{TP + FN};\;\;precision = \frac{TP}{TP + FP}
+\]
+\[
+FPR = \frac{FP}{FP + TN}
+\]
+\[
+affinity = lift = \frac{accuracy}{p}
+\]
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Receiver Operating Characteristic}
+
+\[
+TPR = \frac{TP}{TP + FN};\;\;FPR = \frac{FP}{FP + TN}
+\]
+
+\begin{center}
+\includegraphics[scale=2.0]{images/roc.png}
+\end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Упражнение}
+
+\begin{exampleblock}{Простые классификаторы}
+В генеральной совокупности существуют объекты 3 классов, вероятность появления которых $p_1 < p_2 < p_3$. Первый классификатор относит все объекты к классу с большей вероятностью (то есть к третьему). Второй классификатор случайно относит объект к одному из классов в соответствии с базовым распределением. Рассчитать precision и recall, которые эти классификаторы дают для каждого из 3 классов.
+\end{exampleblock}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Метрики качества. Регрессия}
+
+\[
+MSE = \frac 1 N \sum (y(x_i) - t_i)^2, \;\; RMSE = \sqrt{MSE}
+\]
+\[
+MAE =  \frac 1 N \sum |y(x_i) - t_i|, \;\; RMAE = \sqrt{MAE}
+\]
+\[
+RSE =  \frac{\sum (y(x_i) - t_i)^2}{\sum (t_i - \bar{t})^2}
+\]
+\[
+correlation = \frac{S_{ty}}{S_t S_y};\;\; S_{ty} = \frac{\sum(y(i)-\overline{y(i)})(t_i - \bar t)}{N-1}
+\]
+\[
+S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \bar t)^2}{N-1}
+\]
+
+\end{frame}
+
+\begin{frame}{NFLT}
 
 \end{frame}
 
@@ -129,7 +517,454 @@
 \section{Деревья решений}
 % ========================================
 
-\begin{frame}{}
+\begin{frame}{Задача}
+
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+    {\bf Дано:}
+    
+		обучающая выборка из профилей нескольких десятков тысяч человек
+		\begin{itemize}
+		\item пол (binary)
+		\item возраст (numeric)
+		\item образование (nominal)
+		\item и еще 137 признаков
+		\item наличие интереса к косметике
+		\end{itemize} 
+
+	{\bf Задача:}
+
+	Для рекламной кампании определить, характеристики людей, интересующихся косметикой
+     
+    \end{column}
+    \begin{column}{.5\textwidth}
+    \includegraphics[scale=0.23]{images/nicole.jpg}    
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Обама или Клинтон?}
+
+\begin{center}
+\includegraphics[scale=0.33]{images/obama.jpg}
+\end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Хороший день для партии в гольф}
+
+\begin{center}
+\includegraphics[scale=0.33]{images/golf.png}
+\end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Регионы принятия решений}
+
+\begin{center}
+\includegraphics[scale=0.45]{images/regions.png}
+\end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Рекурсивный алгоритм}
+
+\texttt{decision\_tree($\mathbf{X}_N$):}
+
+\texttt{\quad если $\mathbf{X}_N$ удовлетворяет критерию листа:}
+
+\texttt{\quad\quad создаем текущий узел $N$ как лист}
+
+\texttt{\quad\quad выбираем подходящий класс $C_N$}
+
+\texttt{\quad иначе:}
+
+\texttt{\quad\quad создаем текущий узел $N$ как внутренний}
+
+\texttt{\quad\quad разбиваем $\mathbf{X}_N$ на подвыборки}
+
+\texttt{\quad\quad для каждой подвыборки $\mathbf X_j$:}
+
+\texttt{\quad\quad\quad n = decision\_tree($\mathbf X_j$)}
+
+\texttt{\quad\quad\quad добавляем $n$ к $N$ как ребенка}
+
+\texttt{\quad возвращаем $N$}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{CART}
+
+Classification And Regression Trees
+
+\begin{enumerate}
+\item Как происходит разделение?
+\item На сколько детей разделять каждый узел?
+\item Какой критерий листа выбрать?
+\item Как укоротить слишком большое дерево?
+\item Как выбрать класс каждого листа?
+\item Что делать, если часть значений отсутствует?
+\end{enumerate}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Чистота узла}
+
+\begin{block}{Задача}
+Выбрать метод, позволяющий разделить узел на два или несколько детей наилучшим образом
+\end{block}
+
+\vspace{1em}
+Ключевое понятие -- {\it impurity} узла.
+\begin{enumerate}
+\item Misclassification
+\[
+i(N) = 1 - \max_k p(x \in C_k)
+\]
+\item Gini
+\[
+i(N) = 1 - \sum_k p^2(x \in C_k) = \sum_{i \neq j} p(x \in C_i) p(x \in C_j)
+\]
+\item Информационная энтропия
+\[
+i(N) =  -\sum_k p(x \in C_k) \log_2 p(x \in C_k)
+\]
+\end{enumerate}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Теория информации}
+
+Количество информации $\thicksim$ ``степень удивления''
+\[
+h(x) = -\log_2 p(x)
+\]
+Информационная энтропия $H[x] = E[h(x)]$
+\[
+H[x] = -\sum p(x) \log_2 p(x) \;\;\text{или}\;\; H[x] = - \int p(x) \log_2 p(x) dx
+\]
+\begin{exampleblock}{Упражнение}
+Дана случайная величина $x$, принимающая 4 значения с равными вероятностями $\frac 1 4$, и случайная величина $y$, принимающая 4 значения с вероятностями $\{\frac 1 2, \; \frac 1 4, \; \frac 1 8, \; \frac 1 8\}$. Вычислить $H[x]$ и $H[y]$.
+\end{exampleblock}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Выбор наилучшего разделения}
+
+\begin{block}{Критерий}
+Выбрать признак и точку отсечения такими, чтобы было максимально уменьшение $impurity$
+\[
+\Delta i(N, N_L, N_R) = i(N) - \frac {N_L}{N} i(N_L) - \frac {N_R}{N} i(N_R)
+\]
+\end{block}
+
+\vspace{1em}
+Замечания
+\begin{itemize}
+\item Выбор границы при числовых признаках: середина?
+\item Решения принимаются локально: нет гарантии глобально оптимального решения
+\item На практике выбор impurity не сильно влияет на результат
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Если разделение не бинарное}
+
+Естественный выбор при разделении на $B$ детей
+\[
+\Delta i(N, N_1, \ldots, N_B) = i(N) - \sum_{k=1}^B \frac{N_k}{N} i(N_k) \rightarrow \max
+\]
+Предпочтение отдается большим $B$. Модификация:
+\[
+\Delta i_B(N, N_1, \ldots, N_B) = \frac{\Delta i(N, N_1, \ldots, N_B)}{-\sum_{k=1}^B \frac{N_k}{N} \log_2 \frac{N_k}{N}} \rightarrow \max
+\]
+(gain ratio impurity)
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Использование нескольких признаков}
+
+\begin{center}
+\includegraphics[scale=0.45]{images/multi1.png}\;
+\includegraphics[scale=0.45]{images/multi2.png}
+\end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Практика}
+
+\begin{exampleblock}{Задача}
+Вычислить наилучшее бинарное разделение корневого узла по одному признаку, пользуясь gini impurity.
+
+\begin{center}
+\begin{tabular}{| l | c | c | c | c |}
+\hline
+\textnumero & {\bf Пол} & {\bf Образование} & {\bf Работа} & {\bf Косметика} \\
+\hline
+1 & М & Высшее & Да & Нет \\
+2 & М & Среднее & Нет & Нет \\
+3 & М & Нет & Да & Нет \\
+4 & М & Высшее & Нет & Да \\
+1 & Ж & Нет & Нет & Да \\
+2 & Ж & Высшее & Да & Да \\
+3 & Ж & Среднее & Да & Нет \\
+4 & Ж & Среднее & Нет & Да \\
+\hline
+\end{tabular}
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Когда остановить разделение}
+
+Split stopping criteria
+\begin{itemize}
+\item никогда
+\item использовать валидационную выборку
+\item установить минимальный размер узла
+\item установить порог $\Delta i(N) > \beta$
+\item статистический подход
+\[
+\chi^2 = \sum_{k=1}^2 \frac{(n_{kL} - \frac{N_L}{N} n_{k})^2}{\frac{N_L}{N} n_{k}}
+\]
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Укорачиваем дерево}
+
+Pruning (a.k.a. отрезание ветвей)
+\begin{enumerate}
+\item Растим ``полное'' дерево $T_0$
+\item На каждом шаге заменяем самый ``слабый'' внутренний узел на лист
+\[
+R_{\alpha}(T_k) = err(T_k) + \alpha size(T_k)
+\]
+\item Для заданного $\alpha $ из получившейся последовательности 
+\[
+T_0 \succ T_1 \succ \ldots \succ T_r
+\]
+выбираем дерево $T_k$, минимизирующее $R_{\alpha}(T_k)$
+\end{enumerate}
+Значение $\alpha$  выбирается на основании тестовой выборки или CV
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Какой класс присвоить листьям}
+
+\begin{enumerate}
+\item Простейший случай: \\ класс с максимальным количеством объектов
+\item Дискриминативный случай: \\ вероятность $p(C_k | x)$
+\end{enumerate}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Вычислительная сложность}
+
+Выборка состоит из $n$ объектов, описанных $m$ признаками
+
+\vspace{1em}
+Предположения
+\begin{enumerate}
+\item Узлы делятся примерно поровну
+\item Дерево имеет $\log n$ уровней
+\item Признаки бинарные
+\end{enumerate}
+
+\vspace{1em}
+{\bf Обучение. } Для узла с $k$ обучающими объектами:
+
+\vspace{1em}
+\hspace{1em}Вычисление impurity по одному признаку $O(k)$
+
+\hspace{1em}Выбор разделяющего признака $O(mk)$ 
+
+\hspace{1em}Итог: $O(mn) + 2 O(m \frac{n}{2}) + 4 O(m \frac{n}{4}) + \ldots = O(m n \log n)$
+
+\vspace{1em}
+{\bf Применение. } $O(\log n)$
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Отсутствующие значения}
+
+\begin{itemize}
+\item Удалить объекты из выборки
+\item Использовать отстутсвие как отдельную категорию
+\item Вычислять impurity, пропуская отсутствующие значения
+\item Surrogate splits: разделяем вторым признаком так, чтобы было максимально похоже на первичное разделение
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Surrogate split}
+\vspace{-1em}
+\[
+c_1: \quad 
+x_1=\begin{pmatrix}0 \\ 7 \\ 8\end{pmatrix},\;
+x_2=\begin{pmatrix}1 \\ 8 \\ 9\end{pmatrix},\;
+x_3=\begin{pmatrix}2 \\ 9 \\ 0\end{pmatrix},\;
+x_4=\begin{pmatrix}4 \\ 1 \\ 1\end{pmatrix},\;
+x_5=\begin{pmatrix}5 \\ 2 \\ 2\end{pmatrix}
+\]
+\[
+c_2: \quad 
+y_1=\begin{pmatrix}3 \\ 3 \\ 3\end{pmatrix},\;
+y_2=\begin{pmatrix}6 \\ 0 \\ 4\end{pmatrix},\;
+y_3=\begin{pmatrix}7 \\ 4 \\ 5\end{pmatrix},\;
+y_4=\begin{pmatrix}8 \\ 5 \\ 6\end{pmatrix},\;
+y_5=\begin{pmatrix}9 \\ 6 \\ 7\end{pmatrix}
+\]
+\begin{center}
+\includegraphics[scale=0.6]{images/surrogate2.png}
+\end{center}
+
+\begin{exampleblock}{Упражнение}
+Вычислить второй surrogate split
+\end{exampleblock}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Задача о косметике}
+
+\begin{center}
+\includegraphics[scale=0.45]{images/model.pdf}
+\end{center}
+
+$X_0$ -- возраст, $X_4$ -- неоконченное высшее образование, $X_6$ - пол
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Задачи регрессии}
+
+Impurity узла N
+\[
+i(N) = \sum_{y \in N} (y - \overline{y})^2
+\]
+
+Присвоение класса листьям
+\begin{itemize}
+\item Среднее значение
+\item Линейная модель
+\end{itemize}
+
+\includegraphics[scale=0.4]{images/housing.png}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Кроме  CART}
+
+\begin{itemize}
+
+\item[ID3] Iterative Dichotomiser 3 
+	\begin{itemize}
+	\item Только номинальные признаки
+	\item Количество детей в узле $=$ количество значений разделяющего признака
+	\item Дерево растет до максимальной высоты
+	\end{itemize}
+	
+\item[С4.5] Улучшение ID3
+	\begin{itemize}
+	\item Числовые признаки -- как в CART, номинальные -- как в ID3
+	\item При отсутствии значения используются {\bf все} дети
+	\item Укорачивает дерево, убирая ненужные предикаты в правилах
+	\end{itemize}
+	
+\item[C5.0] Улучшение C4.5
+	\begin{itemize}
+	\item Проприетарный
+	\end{itemize}
+		
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Решающие деревья. Итог}
+
+\begin{itemize}
+\item[+] Легко интерпретируемы. Визуализация (ня!)
+\item[+] Любые входные данные
+\item[+] Мультикласс из коробки
+\item[+] Предсказание за $O(\log n)$
+\item[+] Поддаются статистическому анализу
+\end{itemize}
+
+\begin{itemize}
+\item[--] Склонны к переобучению
+\item[--] Жадные и  нестабильные
+\item[--] Плохо работают при дисбалансе классов
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\begin{frame}{Ключевые фигуры}
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+    	\vspace{5em}
+    	\begin{itemize}
+			\item Claude Elwood Shannon \\ (Теория информации)
+			\item Leo Breiman \\ (CART, RF)
+			\item John Ross Quinlan  \\ (ID3, C4.5, C5.0)
+		\end{itemize}        
+    \end{column}
+    \begin{column}{.5\textwidth}
+    \begin{center}
+    	\includegraphics[scale=0.3]{images/shannon.jpg}\, 	   
+	   \includegraphics[scale=0.3115]{images/breiman.png}   
+	   
+	   \vspace{0.3em}
+	   \includegraphics[scale=0.32]{images/quinlan.png} 
+    \end{center}	   
+    \end{column}
+  \end{columns}
 
 \end{frame}
 
