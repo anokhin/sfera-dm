@@ -18,6 +18,23 @@
 \definecolor{shadecolor}{cmyk}{0,0,0,1}
 \usepackage{multirow}
 
+\usepackage{listings}
+
+\lstset{
+	backgroundcolor=\color{lightgray},
+	commentstyle=\color{blue},
+	frame=single
+	breakatwhitespace, 
+	language=python, 
+	columns=fullflexible, 
+	keepspaces, 
+	breaklines, 
+	tabsize=3, 
+	showstringspaces=false, 
+	extendedchars=true,
+	numbers=left
+}
+
 \makeatletter
 
 \setbeamercolor{title}{fg=white}
@@ -62,6 +79,14 @@
 \section{Задачи классификации и регрессии}
 % ========================================
 
+\begin{frame}{}
+
+\begin{center}
+\Large Задачи классификации и регрессии
+\end{center}
+
+\end{frame}
+
 \begin{frame}{Классификация: интуиция}
 
 \begin{block}{Задача}
@@ -82,7 +107,7 @@
 \begin{block}{Задача}
 Разработать алгоритм, позволяющий предсказать числовую характеристику произвольного объекта из некоторого множества
 \begin{itemize}
-\item Дана {\it обучающая выборка}, в которой для каждого объекта известно значение данной числовой характеристики
+\item Дана {\it обучающая выборка}, в которой для каждого объекта известно значение числовой характеристики
 \end{itemize}
 \end{block}
 
@@ -107,7 +132,7 @@ H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \
 Задачи
 \begin{itemize}
 \item Классификация: $|\mathcal{Y}| < C$
-\item Регрессия: $\mathcal{Y} = \mathbb{R}$
+\item Регрессия: $\mathcal{Y} = [a, b] \subset \mathbb{R}$
 \end{itemize}
 
 \end{frame}
@@ -138,6 +163,14 @@ A(X, Y) : (\mathcal{X}, \mathcal{Y})^N \rightarrow \Theta
 \section{Подходы к моделированию}
 % ========================================
 
+\begin{frame}{}
+
+\begin{center}
+\Large Подходы к моделированию
+\end{center}
+
+\end{frame}
+
 \begin{frame}{Виды моделей}
 
 {\bf Генеративные модели.} Смоделировать $p(x | C_k)$ и $p(C_k)$, применить теорему Байеса
@@ -157,18 +190,29 @@ p(C_k | x) = \frac{p(x | C_k) p(C_k)}{p(x)}
 \begin{frame}{Вероятностные модели VS Функции решения}
 
 \begin{itemize}
-
-\item Отказ от классификации (reject option)
-\item Дисбаланс в выборке
-\item Ансамбли моделей
-\item Сильные предположения о природе данных
-\item Излишняя (вычислительная) сложность
-
+\item[\color{green}\ding{108}] Отказ от классификации (reject option)
+\item[\color{green}\ding{108}] Дисбаланс в выборке
+\item[\color{green}\ding{108}] Ансамбли моделей
+\item[\color{red}\ding{108}] Сильные предположения о природе данных
+\item[\color{red}\ding{108}] Излишняя (вычислительная) сложность
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Байесовский подход к моделированию}
+
+{\bf Идея.} Вместо фиксированного, но неизвестного $\theta^*$ ищем апостериорное распределение $p(\theta | \mathcal{D})$\\ 
+{\bf Дано.} $p(y_i)$, $p(\theta)$, $p(\mathbf{x} | \theta)$ 
+\[
+p(y_i | \mathbf{x}, \mathcal{D})= \frac{p(\mathbf{x} | y_i, \mathcal{D}) p(y_i | \mathcal{D})}{\sum_jp(\mathbf{x} | y_j, \mathcal{D}) p(y_j | \mathcal{D})} = \frac{p(\mathbf{x} | y_i, \mathcal{D}) p(y_i)}{\sum_jp(\mathbf{x} | y_j, \mathcal{D}) p(y_j)}
+\]
+\[
+p(\mathbf{x} | y_i, \mathcal{D}) = \int p(\mathbf{x} | \theta) p(\theta | \mathcal{D}) d\theta
+\]
+Апостериорное распределение
+\[
+p(\theta | \mathcal{D}) = \frac{p(\mathcal{D} | \theta) p(\theta)}{\int p(\mathcal{D} | \theta) p(\theta) d\theta} = \frac{\prod_n p(\mathbf{x}_n | \theta) p(\theta)}{\int \prod_n p(\mathbf{x}_n | \theta) p(\theta) d\theta}
+\]
 
 \end{frame}
 
@@ -274,22 +318,30 @@ Q(X, Y, \theta) = \frac{1}{N} \sum_{n=1}^N \mathcal{L}(\mathbf{x}_n, y_n, \theta
 \section{Теория принятия решений}
 % ========================================
 
-\begin{frame}{ТПР -- Классификация}
+\begin{frame}{}
+
+\begin{center}
+\Large Теория принятия решений
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Классификация}
 
 {\bf Пусть}
 
-$\mathcal{R}_k$ -- область, такая что все $x \in \mathcal{R}_k$ относим к $C_k$
+$\mathcal{R}_k$ -- область, такая что все $\mathbf{x} \in \mathcal{R}_k$ относим к $y_k$
 
 {\bf Дано}
 
-$R_{kj}$ -- риск, связанный с отнесением объекта класса $C_k$ к классу $C_j$
+$R_{kj}$ -- риск, связанный с отнесением объекта класса $y_k$ к классу $y_j$
 
 {\bf Найти}
 
 $\forall k: \mathcal{R}_k$, такие, что математическое ожидание риска $E[R]$ минимально.
 
 \[
-E[R] = \sum_k \sum_j \int_{\mathcal{R}_j} R_{kj} p(C_k | x) p(x) dx
+E[R] = \sum_k \sum_j \int_{\mathcal{R}_j} R_{kj} p(y_k | \mathbf{x}) p(\mathbf{x}) dx
 \]
 
 \end{frame}
@@ -307,7 +359,7 @@ normal & 1 & 0
 \end{tabular}
 \end{center}
 
-Условные вероятности $p(C_k | x)$
+Условные вероятности $p(y_k | x)$
 \[ 
 p(\mathtt{normal} | \mathtt{moving}) = 0.9, \; p(\mathtt{normal} | {\mathtt{not\;moving}}) = 0.3
 \]
@@ -319,22 +371,22 @@ p(\mathtt{moving}) = 0.7
 
 \end{frame}
 
-\begin{frame}{ТПР -- Регрессия}
+\begin{frame}{Регрессия}
 
 Те же виды моделей: {\bf генеративные}, {\bf дискриминативные}, {\bf функция решения}
 \vspace{1em}
 
 Задана функция риска
 \[
-R(t, y(x))
+R(y, h(\mathbf{x}))
 \]
 Математическое ожидание $E[R]$
 \[
-E[R] = \int \!\! \int R(t, y(x)) p(x, t) dx dt 
+E[R] = \int \!\! \int R(y, h(\mathbf{x})) p(\mathbf{x}, y) d\mathbf{x} dy
 \]
-Для квадратичной функции риска $R(t, y(x)) = [t - y(x)]^2$
+Для квадратичной функции риска $R(y, h(\mathbf{x})) = [y - h(\mathbf{x})]^2$
 \[
-y(x) = E_t[t | x]
+h(x) = E_y[h | \mathbf{x}] = \int y p(y | \mathbf{x}) dy
 \]
 
 \end{frame}
@@ -342,6 +394,14 @@ y(x) = E_t[t | x]
 % ========================================
 \section{Оценка результатов классификации}
 % ========================================
+
+\begin{frame}{}
+
+\begin{center}
+\Large Оценка результатов классификации
+\end{center}
+
+\end{frame}
 
 \begin{frame}{Как оценить различные модели?}
 
@@ -412,20 +472,20 @@ p \in \left(f + \frac{z^2}{2N} \pm z \sqrt{\frac f N - \frac{f^2}{N}+\frac{z^2}{
 
 \begin{frame}{Метрики качества. Вероятностные модели.}
 
-Пусть $t_i$ - действительный класс для объекта $x_i$
+Пусть $y_i$ - действительный класс для объекта $\mathbf{x}_i$
 \begin{itemize}
 \item  Information loss 
 \[
-- \frac 1 N \sum_i \log_2 p(t_i | x_i)
+- \frac 1 N \sum_i \log_2 p(y_i | \mathbf{x}_i)
 \]
 \item Quadratic loss 
 \[
-\frac 1 N \sum_j (p(t_j | x_i) - a_j(x_i))^2,
+\frac 1 N \sum_j (p(y_j | \mathbf{x}_i) - a_j(\mathbf{x}_i))^2,
 \] 
 где
 \[
-a_j(x_i) = \begin{cases}
-1, \;\text{если}\;C_j = t_i\\
+a_j(\mathbf{x}_i) = \begin{cases}
+1, \;\text{если}\;C_j = y_i\\
 0, \;\text{иначе}
 \end{cases} 
 \]
@@ -463,8 +523,6 @@ affinity = lift = \frac{accuracy}{p}
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Receiver Operating Characteristic}
 
 \[
@@ -477,8 +535,6 @@ TPR = \frac{TP}{TP + FN};\;\;FPR = \frac{FP}{FP + TN}
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Упражнение}
 
 \begin{exampleblock}{Простые классификаторы}
@@ -487,29 +543,40 @@ TPR = \frac{TP}{TP + FN};\;\;FPR = \frac{FP}{FP + TN}
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Метрики качества. Регрессия}
 
 \[
-MSE = \frac 1 N \sum (y(x_i) - t_i)^2, \;\; RMSE = \sqrt{MSE}
+MSE = \frac 1 N \sum (h(\mathbf{x}_i) - y_i)^2, \;\; RMSE = \sqrt{MSE}
 \]
 \[
-MAE =  \frac 1 N \sum |y(x_i) - t_i|, \;\; RMAE = \sqrt{MAE}
+MAE =  \frac 1 N \sum |h(\mathbf{x}_i) - y_i|, \;\; RMAE = \sqrt{MAE}
 \]
 \[
-RSE =  \frac{\sum (y(x_i) - t_i)^2}{\sum (t_i - \bar{t})^2}
+RSE =  \frac{\sum (h(\mathbf{x}_i) - y_i)^2}{\sum (y_i - \bar{y})^2}
 \]
 \[
-correlation = \frac{S_{ty}}{S_t S_y};\;\; S_{ty} = \frac{\sum(y(i)-\overline{y(i)})(t_i - \bar t)}{N-1}
+correlation = \frac{S_{hy}}{\sqrt{S_h S_y}};\;\; S_{yh} = \frac{\sum(h(i)-\overline{h(i)})(y_i - \bar y)}{N-1}
 \]
 \[
-S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \bar t)^2}{N-1}
+S_{h} = \frac{\sum(h(i)-\overline{h(i)})^2}{N-1};\;\;S_{y} = \frac{\sum(y_i - \bar y)^2}{N-1}
 \]
 
 \end{frame}
 
-\begin{frame}{NFLT}
+\begin{frame}{NFLT, MDL, AIC и все такое}
+
+\begin{block}{No free lunch theorem}
+Не существует единственной лучшей модели, решающей все задачи
+\end{block}
+
+\begin{block}{Minimum description length}
+Лучшая гипотеза о данных -- та, которая ведет к самому краткому их описанию
+\end{block}
+\begin{block}{Akaike information criterion (AIC)}
+\[
+model = \arg\max	\ln p(\mathcal{D} | \theta_{ML}) - \|\theta\|
+\]
+\end{block}
 
 \end{frame}
 
@@ -517,8 +584,15 @@ S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \b
 \section{Деревья решений}
 % ========================================
 
-\begin{frame}{Задача}
+\begin{frame}{}
 
+\begin{center}
+\Large Деревья решений
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Задача}
 
 \begin{columns}[T]
     \begin{column}{.5\textwidth}
@@ -545,8 +619,6 @@ S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \b
   
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Обама или Клинтон?}
 
 \begin{center}
@@ -554,8 +626,6 @@ S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \b
 \end{center}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Хороший день для партии в гольф}
 
@@ -565,8 +635,6 @@ S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \b
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Регионы принятия решений}
 
 \begin{center}
@@ -575,35 +643,27 @@ S_{y} = \frac{\sum(y(i)-\overline{y(i)})^2}{N-1};\;\;S_{t} = \frac{\sum(t_i - \b
 
 \end{frame}
 
-% ============================================== %
+\defverbatim[colored]\dt{%
+\begin{lstlisting}[tabsize=4,basicstyle=\ttfamily]
+function decision_tree(X_N):
+	if X_N satisfies leaf criterion:
+		L = create_leaf(X_N)
+		assign_class(L)
+	else:
+		L = create_node(X_N)
+		X_1,..,X_S = split(L)
+		for i in 1..S:
+			C = decision_tree(X_i)
+			add_child(L, C)
+	return L
+\end{lstlisting}
+}
 
 \begin{frame}{Рекурсивный алгоритм}
 
-\texttt{decision\_tree($\mathbf{X}_N$):}
-
-\texttt{\quad если $\mathbf{X}_N$ удовлетворяет критерию листа:}
-
-\texttt{\quad\quad создаем текущий узел $N$ как лист}
-
-\texttt{\quad\quad выбираем подходящий класс $C_N$}
-
-\texttt{\quad иначе:}
-
-\texttt{\quad\quad создаем текущий узел $N$ как внутренний}
-
-\texttt{\quad\quad разбиваем $\mathbf{X}_N$ на подвыборки}
-
-\texttt{\quad\quad для каждой подвыборки $\mathbf X_j$:}
-
-\texttt{\quad\quad\quad n = decision\_tree($\mathbf X_j$)}
-
-\texttt{\quad\quad\quad добавляем $n$ к $N$ как ребенка}
-
-\texttt{\quad возвращаем $N$}
+\dt
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{CART}
 
@@ -619,8 +679,6 @@ Classification And Regression Trees
 \end{enumerate}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Чистота узла}
 
@@ -647,8 +705,6 @@ i(N) =  -\sum_k p(x \in C_k) \log_2 p(x \in C_k)
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Теория информации}
 
 Количество информации $\thicksim$ ``степень удивления''
@@ -664,8 +720,6 @@ H[x] = -\sum p(x) \log_2 p(x) \;\;\text{или}\;\; H[x] = - \int p(x) \log_2 p(
 \end{exampleblock}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Выбор наилучшего разделения}
 
@@ -686,8 +740,6 @@ H[x] = -\sum p(x) \log_2 p(x) \;\;\text{или}\;\; H[x] = - \int p(x) \log_2 p(
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Если разделение не бинарное}
 
 Естественный выбор при разделении на $B$ детей
@@ -702,8 +754,6 @@ H[x] = -\sum p(x) \log_2 p(x) \;\;\text{или}\;\; H[x] = - \int p(x) \log_2 p(
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Использование нескольких признаков}
 
 \begin{center}
@@ -712,8 +762,6 @@ H[x] = -\sum p(x) \log_2 p(x) \;\;\text{или}\;\; H[x] = - \int p(x) \log_2 p(
 \end{center}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Практика}
 
@@ -740,8 +788,6 @@ H[x] = -\sum p(x) \log_2 p(x) \;\;\text{или}\;\; H[x] = - \int p(x) \log_2 p(
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Когда остановить разделение}
 
 Split stopping criteria
@@ -757,8 +803,6 @@ Split stopping criteria
 \end{itemize}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Укорачиваем дерево}
 
@@ -779,8 +823,6 @@ T_0 \succ T_1 \succ \ldots \succ T_r
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Какой класс присвоить листьям}
 
 \begin{enumerate}
@@ -789,8 +831,6 @@ T_0 \succ T_1 \succ \ldots \succ T_r
 \end{enumerate}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Вычислительная сложность}
 
@@ -819,8 +859,6 @@ T_0 \succ T_1 \succ \ldots \succ T_r
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Отсутствующие значения}
 
 \begin{itemize}
@@ -831,8 +869,6 @@ T_0 \succ T_1 \succ \ldots \succ T_r
 \end{itemize}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Surrogate split}
 \vspace{-1em}
@@ -862,8 +898,6 @@ y_5=\begin{pmatrix}9 \\ 6 \\ 7\end{pmatrix}
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Задача о косметике}
 
 \begin{center}
@@ -873,8 +907,6 @@ y_5=\begin{pmatrix}9 \\ 6 \\ 7\end{pmatrix}
 $X_0$ -- возраст, $X_4$ -- неоконченное высшее образование, $X_6$ - пол
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Задачи регрессии}
 
@@ -892,8 +924,6 @@ i(N) = \sum_{y \in N} (y - \overline{y})^2
 \includegraphics[scale=0.4]{images/housing.png}
 
 \end{frame}
-
-% ============================================== %
 
 \begin{frame}{Кроме  CART}
 
@@ -922,8 +952,6 @@ i(N) = \sum_{y \in N} (y - \overline{y})^2
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Решающие деревья. Итог}
 
 \begin{itemize}
@@ -942,8 +970,6 @@ i(N) = \sum_{y \in N} (y - \overline{y})^2
 
 \end{frame}
 
-% ============================================== %
-
 \begin{frame}{Ключевые фигуры}
 
 \begin{columns}[T]
@@ -958,8 +984,8 @@ i(N) = \sum_{y \in N} (y - \overline{y})^2
     \begin{column}{.5\textwidth}
     \begin{center}
     	\includegraphics[scale=0.3]{images/shannon.jpg}\, 	   
-	   \includegraphics[scale=0.3115]{images/breiman.png}   
-	   
+	   \includegraphics[scale=0.3115]{images/breiman.png}
+	   	   
 	   \vspace{0.3em}
 	   \includegraphics[scale=0.32]{images/quinlan.png} 
     \end{center}	   
