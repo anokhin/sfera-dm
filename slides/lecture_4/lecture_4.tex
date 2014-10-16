@@ -153,7 +153,7 @@ A(X, Y) : (\mathcal{X}, \mathcal{Y})^N \rightarrow \Theta
 \]
 (learning/inference)
 
-\item[D] Используя полученную модель $h^*(x) = h(x, \theta^*)$, классифицируем неизвестные объекты (decision making)
+\item[D] Используя полученную модель $h^*(\mathbf{x}) = h(\mathbf{x}, \theta^*)$, классифицируем неизвестные объекты (decision making)
 
 \end{enumerate}
 
@@ -173,17 +173,17 @@ A(X, Y) : (\mathcal{X}, \mathcal{Y})^N \rightarrow \Theta
 
 \begin{frame}{Виды моделей}
 
-{\bf Генеративные модели.} Смоделировать $p(x | C_k)$ и $p(C_k)$, применить теорему Байеса
+{\bf Генеративные модели.} Смоделировать $p(\mathbf{x} | y_k)$ и $p(y_k)$, применить теорему Байеса
 \[
-p(C_k | x) = \frac{p(x | C_k) p(C_k)}{p(x)}
+p(y_k | \mathbf{x}) = \frac{p(\mathbf{x} | y_k) p(y_k)}{p(\mathbf{x})}
 \]
-и использовать $p(C_k | x)$ для принятия решения \\ (NB, Bayes Networks, MRF)
+и использовать $p(y_k | \mathbf{x})$ для принятия решения \\ (NB, Bayes Networks, MRF)
 \vspace{1em}
 
-{\bf Дискриминативные модели.} Смоделировать $p(C_k | x)$ и использовать ее для принятия решения \\ (Logistic Regression, Decision Trees)
+{\bf Дискриминативные модели.} Смоделировать $p(y_k | \mathbf{x})$ и использовать ее для принятия решения \\ (Logistic Regression, Decision Trees)
 \vspace{1em}
 
-{\bf Функции решения.} Смоделировать напрямую $h^*(x): \mathcal{X} \rightarrow \mathcal{Y}$ \\ (Linear Models, Neural Networks)
+{\bf Функции решения.} Смоделировать напрямую $h^*(\mathbf{x}): \mathcal{X} \rightarrow \mathcal{Y}$ \\ (Linear Models, Neural Networks)
 
 \end{frame}
 
