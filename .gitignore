@@ -82,3 +82,4 @@ docs/_build/
 *.snm
 *.nav
 *.vrb
+.Rproj.user
