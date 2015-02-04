@@ -59,21 +59,20 @@ def main():
 
     tweet_writer = UsersWriter()
 
-    for kw in ['datamining', 'bigdata']:
+    for kw in ['xbox', 'playstation', 'wii']:
         try:
         # if True:
             page = 1
 
-            while True:
-                print "page:", page
+            while len(tweet_writer.users) < 100000:
+                print "page:", page,
                 try:
                     result = api.GetUsersSearch(kw, page=page)
                 except twitter.TwitterError as ex:
                     print ex.message[0]['message']
                     if ex.message[0]['code'] == 44:
                         break
-                    if ex.message[0]['code'] == 88:
-                        sleep_time = api.GetSleepTime("users/search")
+                    if ex.message[0]['code'] == 88:                        
                         print "sleep for ", sleep_time
                         time.sleep(sleep_time)
                         continue
@@ -85,18 +84,22 @@ def main():
                     break
 
                 for user in result:
-                    print user.id
+                    # print user.id
                     if not user.lang or user.lang != 'en':
                         continue
 
                     if not user.statuses_count or user.statuses_count < MIN_STATUSES:
                         continue
 
-                    print "user found: %s" % user.id
+                    # print "user found: %s" % user.id
                     tweet_writer.append_user(user)
                 page += 1
 
                 print 'users found: %s' % len(tweet_writer.users)
+                sleep_time = api.GetSleepTime("users/search")
+                if sleep_time > 0:
+                    print "Sleeping: %d" % sleep_time 
+                    time.sleep(sleep_time)
 
         except Exception as ex:
             print ex
