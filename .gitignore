@@ -83,3 +83,4 @@ docs/_build/
 *.nav
 *.vrb
 .Rproj.user
+.ipynb_checkpoints
