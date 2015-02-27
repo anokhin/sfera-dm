@@ -118,6 +118,33 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 
 \end{frame}
 
+\begin{frame}{Шкала оценок}
+
+\begin{figure}
+  \begin{subfigure}[b]{.45\linewidth}
+    \centering
+    \includegraphics[height=3cm]{images/2.png}
+    \caption{0 --- 49}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{.45\linewidth}
+    \centering
+    \includegraphics[height=3cm]{images/3.png}
+    \caption{50 --- 79}
+  \end{subfigure}\\
+  \begin{subfigure}[b]{.45\linewidth}
+    \centering
+    \includegraphics[height=3cm]{images/4.png}
+    \caption{80 --- 94}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{.45\linewidth}
+    \centering   
+    \includegraphics[height=3cm]{images/5.png}
+    \caption{95 --- 100}
+  \end{subfigure}%
+\end{figure}
+
+\end{frame}
+
 \begin{frame}{Правила}
 
 \begin{itemize}
@@ -177,32 +204,72 @@ Data-
 
 \end{frame}
 
-\begin{frame}{Success stories}
+%\begin{frame}{Success stories}
+%
+%\begin{figure}
+%        \centering
+%        \begin{subfigure}[b]{0.45\textwidth}
+%                \includegraphics[width=\textwidth]{images/google.png}
+%                \caption{Google}                
+%        \end{subfigure}%        
+%        \begin{subfigure}[b]{0.45\textwidth}
+%                \includegraphics[width=\textwidth]{images/linkedin.png}
+%                \caption{LinkedIn}     
+%        \end{subfigure}
+%        
+%        \begin{subfigure}[b]{0.45\textwidth}
+%                \includegraphics[width=\textwidth]{images/delay.png}
+%                \caption{KnowDelay}                
+%        \end{subfigure}%        
+%        \begin{subfigure}[b]{0.45\textwidth}
+%                \includegraphics[width=0.9\textwidth]{images/digits.png}
+%                \caption{Handwritten digits}
+%        \end{subfigure}
+%\end{figure}
+%
+%\end{frame}
 
-\begin{figure}
-        \centering
-        \begin{subfigure}[b]{0.45\textwidth}
-                \includegraphics[width=\textwidth]{images/google.png}
-                \caption{Google}                
-        \end{subfigure}%        
-        \begin{subfigure}[b]{0.45\textwidth}
-                \includegraphics[width=\textwidth]{images/linkedin.png}
-                \caption{LinkedIn}     
-        \end{subfigure}
-        
-        \begin{subfigure}[b]{0.45\textwidth}
-                \includegraphics[width=\textwidth]{images/delay.png}
-                \caption{KnowDelay}                
-        \end{subfigure}%        
-        \begin{subfigure}[b]{0.45\textwidth}
-                \includegraphics[width=0.9\textwidth]{images/digits.png}
-                \caption{Handwritten digits}
-        \end{subfigure}
-\end{figure}
+\begin{frame}{Multimedia Data Mining}
+
+\begin{center}
+\includegraphics[scale=0.325]{images/multimedia.png}
+\end{center}
 
 \end{frame}
 
-\begin{frame}{Fail (Программа TIA)}
+\begin{frame}{Data Mining в медицине и биологии}
+
+\begin{center}
+\includegraphics[scale=1.5]{images/dna.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Data Mining в финансовой сфере}
+
+\begin{itemize}
+\item Предсказание биржевых цен
+\item Предсказание курса валют
+\item Работа с рисками и банкротством
+\item Кредитный скоринг
+\item Выявление мошенников
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Data Mining для CRM и целевого маркетинга}
+
+CRM = Customer Relationship Management
+\begin{itemize}
+\item Как определить, кто собирается уйти?
+\item Какие продукты предложить клиенту?
+\item Как найти новых клиентов?
+\item Реклама!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Data Mining для Высшего блага (на самом деле fail)}
 
 \begin{itemize}
 \item Наблюдаем $10^9$ человек
@@ -246,15 +313,12 @@ N = p_1^2 n_{pp} n_{pd} = 250000 >> 10
     \begin{column}{.5\textwidth}
     	CRISP-DM   	
     	\begin{itemize}
-    		\item SPSS 
+    		\item IBM/SPSS
     		\item Teradata 
    			\item Daimler AG 
     		\item NCR Corporation 
     		\item OHRA
-    		\item IBM
 		\end{itemize}
-		
-		Другие процессы: KDD, SEMMA 	
     \end{column}
     %   
     \begin{column}{.5\textwidth}
@@ -442,6 +506,23 @@ N = p_1^2 n_{pp} n_{pd} = 250000 >> 10
 
 \end{frame}
 
+\begin{frame}{Другие процессы: SEMMA, KDD}
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth}
+    	\includegraphics[width=\textwidth]{images/semma.png}    	
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[width=\textwidth]{images/kdd.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
 % =======================
 \section{Exploratory data analysis}
 % =======================
@@ -512,30 +593,6 @@ EDA направлен на предварительное изучение да
   \begin{center}
    		\includegraphics[width=0.8\textwidth]{images/salaries.png}
     \end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]{Задача}
-
-{\bf Дано:} информация о посещении пользователями интернет-сайтов \\
-{\bf Требуется:} исследовать распределение количества уникальных пользователей в зависимости от популярности сайта
-
-\vspace{1em}
-Пошаговая инструкция
-\begin{enumerate}
-\item Скачать файл с данными (400M) \url{http://bit.ly/1xdOrHD}
-\item Скачать и запустить шаблон кода на python \url{http://bit.ly/1B6fEcO}
-\begin{shaded}
-{\color{green} \begin{verbatim}
-$ python eda.py -h
-$ python eda.py -n 20 eda.dat
-\end{verbatim}}
-\end{shaded}
-\item Заполнить функцию \textsf{top\_domain\_user\_counts}
-\item Заполнить функцию \textsf{plot\_log\_top\_domains} и посмотреть на распределение в log-log шкале
-\item Заполнить функцию \textsf{plot\_linear\_model}, попутно осознав параметры модели
-\item Выписать полученное распределение $n_{users}(rank)$
-\end{enumerate}
 
 \end{frame}
 
