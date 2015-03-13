@@ -206,8 +206,72 @@ p(\mathbf{x} | \mu_k, \mathbf{\Sigma}_k) = \sum_{k=1}^K \pi_k \mathcal{N}(\mathb
 
 \end{frame}
 
+\begin{frame}{Нерешенное}
+
+\begin{center}
+\includegraphics[scale=0.5]{images/confusion.jpg}
+\end{center}
+
+\begin{itemize}
+\item Как выбрать количество кластеров?
+\item Как быть с несферическими (неэллиптическими) кластерами?
+\item Как быть, когда {\it вообще} непонятно, сколько кластеров?
+\item Как оценить качество модели?
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}{План занятия}
 \tableofcontents
+\end{frame}
+
+% ============================================== %
+
+\section{Выбор количества кластеров}
+
+% ============================================== %
+
+\begin{frame}
+
+\begin{center}
+{\Large Выбор количества кластеров}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Выбор наилучшего $K$}
+
+{\it Идея.} Выбрать критерий качества кластеризации и построить его значение для $K = 1, 2, \ldots$
+
+\begin{columns}[C]
+    \begin{column}{.5\textwidth} 
+    \begin{itemize}
+	\item средняя сумма квадратов расстояния до центроида
+	\item средний диаметр кластера
+	\end{itemize} 		    
+    \end{column}
+    \begin{column}{.5\textwidth}
+    \vspace{1em}
+    \includegraphics[scale=0.3]{images/elbow.png}    
+    \end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Критерий Silhouette}
+
+Пусть дана кластеризация в $K$ кластеров, и объект $i$ попал в $C_k$
+
+\vspace{1em}
+\begin{itemize}
+\item $a(i)$ -- среднее расстояние от $i$ объекта до объектов из $C_k$
+\item $b(i) = min_{j \neq k} b_j(i)$,  где $b_j(i)$ -- среднее расстояние от $i$ объекта до объектов из $C_j$
+\end{itemize}
+\[
+silhouette(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}
+\]
+Средний silhouette для всех точек из $\mathbf{X}$ является критерием качества кластеризации.
+
 \end{frame}
 
 % ============================================== %
@@ -215,6 +279,22 @@ p(\mathbf{x} | \mu_k, \mathbf{\Sigma}_k) = \sum_{k=1}^K \pi_k \mathcal{N}(\mathb
 \section{Иерархическая кластеризация}
 
 % ============================================== %
+
+\begin{frame}
+
+\begin{center}
+{\Large Иерархическая кластеризация}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Дерево языков \href{http://mentalfloss.com/article/59665/feast-your-eyes-beautiful-linguistic-family-tree}{(источник)}}
+
+\begin{center}
+\includegraphics[width=\textwidth]{images/languages.png}
+\end{center}
+
+\end{frame}
 
 \begin{frame}{Иерархическая кластеризация: идея метода}
 
@@ -235,18 +315,10 @@ Divisive
 
 \end{frame}
 
-\begin{frame}{Радиальная дендрограмма \href{http://itol.embl.de/}{(источник)}} 
+\begin{frame}{Похожие динозавры \href{http://palaeos.com/vertebrates/coelurosauria/images/feathered_dinosaurs.jpg}{(источник)}}
 
 \begin{center}
-\includegraphics[scale=0.3]{images/radial.png}
-\end{center}
-
-\end{frame}
-
-\begin{frame}{Дендрограмма}
-
-\begin{center}
-\includegraphics[scale=0.3]{images/dendro.png}
+\includegraphics[width=\textwidth]{images/dinosaurs.jpg}
 \end{center}
 
 \end{frame}
@@ -336,6 +408,14 @@ d_e(C_i, C_j) = \sqrt{\frac{n_i n_j}{n_i + n_j}} \|\mathbf{m}_i -\mathbf{m}_j \|
 
 % ============================================== %
 
+\begin{frame}
+
+\begin{center}
+{\Large DBSCAN}
+\end{center}
+
+\end{frame}
+
 \begin{frame}{DBSCAN: идея метода}
 
 \begin{itemize}
@@ -395,7 +475,7 @@ d_e(C_i, C_j) = \sqrt{\frac{n_i n_j}{n_i + n_j}} \|\mathbf{m}_i -\mathbf{m}_j \|
 
 \end{frame}
 
-\begin{frame}{DBSCAN: итог}
+\begin{frame}{DBSCAN: итог и \href{http://www.naftaliharris.com/blog/visualizing-dbscan-clustering/}{демо}}
 
 \begin{columns}[C]
     \begin{column}{.6\textwidth} 
@@ -415,85 +495,67 @@ d_e(C_i, C_j) = \sqrt{\frac{n_i n_j}{n_i + n_j}} \|\mathbf{m}_i -\mathbf{m}_j \|
 
 \end{frame}
 
-\begin{frame}{Викторина}
+% ============================================== %
+
+\section{Кластеризация: итоги}
+
+% ============================================== %
+
+\begin{frame}
 
 \begin{center}
-\includegraphics[height=0.8\textheight]{images/quiz.png}
+{\Large Кластеризация: итоги}
 \end{center}
 
 \end{frame}
 
-% ============================================== %
+\begin{frame}{Качество кластеризации}
 
-\section{Выбор количества кластеров}
-
-% ============================================== %
-
-\begin{frame}{Выбор наилучшего $K$}
-
-{\it Идея.} Выбрать критерий качества кластеризации и построить его значение для $K = 1, 2, \ldots$
-
-\begin{columns}[C]
-    \begin{column}{.5\textwidth} 
-    \begin{itemize}
-	\item средняя сумма квадратов расстояния до центроида
-	\item средний диаметр кластера
-	\end{itemize} 		    
-    \end{column}
-    \begin{column}{.5\textwidth}
-    \vspace{1em}
-    \includegraphics[scale=0.3]{images/elbow.png}    
-    \end{column}
-\end{columns}
-
-\end{frame}
-
-\begin{frame}{Критерий Silhouette}
-
-Пусть дана кластеризация в $K$ кластеров, и объект $i$ попал в $C_k$
+Пусть дана обучающая выборка, для которой правильная кластеризация $C$ известна. С помощью выбранного алгоритма получена кластеризация $K$. Проверить, насколько $K$ совпадает с $C$.
 
 \vspace{1em}
 \begin{itemize}
-\item $a(i)$ -- среднее расстояние от $i$ объекта до объектов из $C_k$
-\item $b(i) = min_{j \neq k} b_j(i)$,  где $b_j(i)$ -- среднее расстояние от $i$ объекта до объектов из $C_j$
-\end{itemize}
+\item Adjusted Rand Index \\
+{\it \small
+$a$ -- кол-во пар объектов, попавших в один кластер и в $C$, и в $K$ \\
+$b$ -- кол-во пар объектов, попавших в разные кластеры и в $C$, и в $K$
 \[
-silhouette(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}
+RI = \frac{a+b}{C^N_2}, \quad ARI = \frac{RI - E_{rdm}[RI]}{\max(RI) - E_{rdm}[RI]}
 \]
-Средний silhouette для всех точек из $\mathbf{X}$ является критерием качества кластеризации.
+}
+\item Mutual Information \\
+{\it \small
+\[
+MI = \sum_{c \in C} \sum_{k \in K} p(c, k) \log \frac{p(c, k)}{p(k)p(c)}
+\]
+}
+\end{itemize}
 
 \end{frame}
 
-\begin{frame}{Кластеризация. Что дальше}
+\begin{frame}{Большие данные}
 
 \begin{itemize}
-\item Графо-теоретические методы (affinity propagation, mcl, etc.)
-\item Снижение размерности (SOM, PCA, etc.)
+\item Balanced Iterative Reducing and Clustering using Hierarchies
+{\it \footnotesize BIRCH: An efficient data clustering method for large databases. \\ Zhang et. al. 1996}
+\item Clustering Using REpresentatives \\
+{\it \footnotesize CURE: An Efficient Clustering Algorithm for Large Databases \\ Sudipto et. al., 2001}
+\item Meta clustering
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Что еще?}
+
+\begin{itemize}
+\item Графо-теоретические методы (affinity propagation, MCL, etc.)
+\item Topic Modelling (PCA, SVD, pLSA, LDA, etc.)
 \item Бесконечномерные смеси (Dirichlet process)
 \end{itemize}
 
 \begin{center}
 \includegraphics[height=0.6\textheight]{images/graph.jpg}
 \end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]{Задача}
-
-Кластеризовать фотографии с футбольных матчей. Ожидается что фотографии игроков одной команды окажутся в одном кластере.
-
-\begin{itemize}
-\item Скачать данные и шаблон кода \url{http://bit.ly/1uALLl4}
-\item Запустить код и интерпретировать дендрограмму
-\begin{shaded}
-{\color{green} \begin{verbatim}
-python football/football.py football/img/
-\end{verbatim}}
-\end{shaded}
-При $K=3$ сколько ошибок дает алгоритм?
-\item Поэкспериментировать с разными видами расстояния между кластерами (-l). Какой из них дает наилучший результат?
-\item Реализовать критерии выбора количества кластеров: diameter и silhouette. Какое число кластеров рекомендует каждый из критериев?
-\end{itemize}
 
 \end{frame}
 
