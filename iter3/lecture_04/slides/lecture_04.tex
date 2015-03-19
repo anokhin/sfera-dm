@@ -138,33 +138,62 @@
 \begin{frame}{Критерии}
 
 Выбираем кофигурацию $\mathbf{y}_i$, соответствующую минимуму критерия
-\begin{itemize}
-\item \[
+\[
 J_{ee} = \frac{\sum_{i < j} (d_{ij} - \delta_{ij})^2} {\sum_{i < j} \delta_{ij}^2}
 \]
-\item \[
+\[
 J_{ff} = \sum_{i < j} \frac{(d_{ij} - \delta_{ij})^2}{\delta_{ij}^2}
 \]
-\item \[
+\[
 J_{ef} = \frac{1} {\sum_{i < j} \delta_{ij}}\sum_{i < j} \frac{(d_{ij} - \delta_{ij})^2}{\delta_{ij}}
 \]
-\end{itemize}
 
 \end{frame}
 
-\begin{frame}
+\defverbatim[colored]\gd{%
+\begin{lstlisting}[tabsize=4,basicstyle=\ttfamily]
+function gd(grad, a0, epsilon):
+	initialise eta(k)
+	k = 0
+	a = a0	 
+	do:
+		k = k + 1
+		a = a - eta(k) grad(a)
+	until |eta(k) grad(a)| < epsilon
+	return a
+\end{lstlisting}
+}
 
-\begin{itemize}
-\item \[
+\begin{frame}{Градиентный спуск}
+
+Требуется найти минимум функции $f(\mathbf{a})$, при этом
+\begin{enumerate}
+\item мы умеем вычислять градиент функции $\nabla f(\mathbf{a})$
+\item задана начальная точка $\mathbf{a}_0$
+\item выбрана функция learning rate $\eta(k)$
+\end{enumerate}
+
+\gd
+
+(\href{http://vis.supstat.com/2013/03/gradient-descent-algorithm-with-r/}{демо})
+
+\end{frame}
+
+\begin{frame}{Градиенты критериев}
+
+\[
 \nabla_{\mathbf{y}_k}J_{ee} = \frac{2} {\sum_{i < j} \delta_{ij}^2} \sum_{j \neq k} (d_{kj} - \delta_{kj}) \frac{\mathbf{y}_k - \mathbf{y}_j}{d_{kj}}
 \]
-\item \[
+\[
 \nabla_{\mathbf{y}_k} J_{ff} = 2 \sum_{j \neq k} \frac{d_{kj} - \delta_{kj}}{\delta_{kj}^2} \frac{\mathbf{y}_k - \mathbf{y}_j}{d_{kj}}
 \]
-\item \[
+\[
 \nabla_{\mathbf{y}_k} J_{ef} = \frac{2} {\sum_{i < j} \delta_{ij}} \sum_{j \neq k} \frac{d_{kj} - \delta_{kj}}{\delta_{kj}} \frac{\mathbf{y}_k - \mathbf{y}_j}{d_{kj}}
 \]
-\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Результаты применения}
 
 \end{frame}
 
@@ -179,6 +208,79 @@ J_{ef} = \frac{1} {\sum_{i < j} \delta_{ij}}\sum_{i < j} \frac{(d_{ij} - \delta_
 \begin{center}
 {\Large T-SNE}
 \end{center}
+
+\end{frame}
+
+\begin{frame}{Идея метода}
+
+Та же, что в MDS, но определяется необычная (вероятностная) схожесть между объектами в исходном и целевом пространствах, а также критерий оптимизации.
+
+\vspace{1em}
+Схожесть между объектами $\mathbf{x}_i$ и $\mathbf{x}_j$ $\sim$ вероятность того, что $\mathbf{x}_i$ ``выберет'' $\mathbf{x}_j$ из остальных соседей, будучи центром некоторого нормального распределения.
+
+\end{frame}
+
+\begin{frame}{Схожесть между объектами}
+
+В исходном пространстве
+\[
+p(j | i) = \frac{\exp(-\|\mathbf{x}_j-\mathbf{x}_i\|^2/{2 \sigma_i^2})}{\sum_{k \neq i}\exp(-\|\mathbf{x}_k-\mathbf{x}_i\|^2/{2 \sigma_i^2})}
+\]
+
+В целевом пространстве
+\[
+q(j | i) = \frac{\exp(-\|\mathbf{y}_j-\mathbf{y}_i\|^2)}{\sum_{k \neq i}\exp(-\|\mathbf{y}_k-\mathbf{y}_i\|^2)}
+\]
+
+\end{frame}
+
+\begin{frame}{Критерий оптимизации}
+
+\begin{block}{Дивергенция Кульбака-Лейблера}
+Насколько распределение $P$ отличается от распределения $Q$?
+\[
+KL(P \| Q) = \sum_i P(z) \log \frac{P(z)}{Q(z)}
+\]
+\end{block}
+
+Критерий
+\[
+J_{SNE} = \sum_i KL(P_i \| Q_i) = \sum_i \sum_j p(j | i) \log \frac{p(j | i)}{q(j | i)} \rightarrow \min_{\mathbf{y}_1, \ldots, \mathbf{y}_n}
+\]
+Градиент
+\[
+\nabla_{\mathbf{y}_i} J_{SNE} = 2 \sum_j \left(p(j | i) - q(j | i) + p(i | j) - q(i | j) \right) (\mathbf{y}_i-\mathbf{y}_j)
+\]
+
+\end{frame}
+
+\begin{frame}{Параметры алгоритма}
+
+\begin{exampleblock}{Идея}
+В областях высокой плотности выбрать $\sigma_i$ маленьким, а в областях низкой плотности -- большим.
+\end{exampleblock}
+\[
+Perp(P_i) = 2^{H(P_i)}, \quad H(P_i) = - \sum_j p(j | i) \log p(j | i)
+\]
+На практике выбираем фиксированное perplexity в интервале $(5, \; 50)$.
+
+
+\end{frame}
+
+\begin{frame}{T-SNE}
+
+Недостатки SNE
+\begin{itemize}
+\item Трудно оптимизировать критерий
+\item ``Crowding problem''
+\end{itemize}
+
+\vspace{1em}
+Отличия T-SNE от SNE
+\begin{itemize}
+\item Использует симметризованный критерий с более простым градиентом
+\item В целевом пространстве схожесть основана на t-распределении, а не на распределении Гаусса
+\end{itemize}
 
 \end{frame}
 
