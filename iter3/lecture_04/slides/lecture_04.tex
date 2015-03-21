@@ -78,7 +78,7 @@
 
 \end{frame}
 
-\begin{frame}{Краткое содержание предыдущей лекции}
+\begin{frame}{Краткое содержание предыдущих лекций}
 
 \begin{columns}[C]
     \begin{column}{.4\textwidth}
@@ -125,7 +125,7 @@
 \begin{itemize}
 \item $\mathbf{x}_i \in \mathcal{X} \subset R^D$ -- объекты в исходном многомерном пространстве
 \item $\delta_{ij}$ -- расстояние между $\mathbf{x}_i$ и $\mathbf{x}_j$
-\item $\mathbf{x}_i \in \mathcal{Y} \subset R^E$ -- объекты в целевом пространстве ($E=2$ или $E=3$)
+\item $\mathbf{y}_i \in \mathcal{Y} \subset R^E$ -- объекты в целевом пространстве ($E=2$ или $E=3$)
 \item $d_{ij}$ -- расстояние между $\mathbf{y}_i$ и $\mathbf{y}_j$
 \end{itemize}
 
@@ -195,6 +195,10 @@ function gd(grad, a0, epsilon):
 
 \begin{frame}{Результаты применения}
 
+\begin{center}
+\includegraphics[scale=0.6]{images/mds_result.png}
+\end{center}
+
 \end{frame}
 
 % ============================================== %
@@ -206,14 +210,21 @@ function gd(grad, a0, epsilon):
 \begin{frame}
 
 \begin{center}
-{\Large T-SNE}
+{\Large t-SNE}
 \end{center}
 
 \end{frame}
 
-\begin{frame}{Идея метода}
+\begin{frame}{Stochastic Neighbor Embedding}
 
+\begin{block}{Идея метода}
 Та же, что в MDS, но определяется необычная (вероятностная) схожесть между объектами в исходном и целевом пространствах, а также критерий оптимизации.
+\end{block}
+
+\begin{center}
+\includegraphics[scale=0.3]{images/maaten.png}\;\;
+\includegraphics[scale=0.26]{images/hinton.jpg}
+\end{center}
 
 \vspace{1em}
 Схожесть между объектами $\mathbf{x}_i$ и $\mathbf{x}_j$ $\sim$ вероятность того, что $\mathbf{x}_i$ ``выберет'' $\mathbf{x}_j$ из остальных соседей, будучи центром некоторого нормального распределения.
@@ -239,7 +250,7 @@ q(j | i) = \frac{\exp(-\|\mathbf{y}_j-\mathbf{y}_i\|^2)}{\sum_{k \neq i}\exp(-\|
 \begin{block}{Дивергенция Кульбака-Лейблера}
 Насколько распределение $P$ отличается от распределения $Q$?
 \[
-KL(P \| Q) = \sum_i P(z) \log \frac{P(z)}{Q(z)}
+KL(P \| Q) = \sum_z P(z) \log \frac{P(z)}{Q(z)}
 \]
 \end{block}
 
@@ -264,10 +275,9 @@ Perp(P_i) = 2^{H(P_i)}, \quad H(P_i) = - \sum_j p(j | i) \log p(j | i)
 \]
 На практике выбираем фиксированное perplexity в интервале $(5, \; 50)$.
 
-
 \end{frame}
 
-\begin{frame}{T-SNE}
+\begin{frame}{t-distributed SNE}
 
 Недостатки SNE
 \begin{itemize}
@@ -276,11 +286,99 @@ Perp(P_i) = 2^{H(P_i)}, \quad H(P_i) = - \sum_j p(j | i) \log p(j | i)
 \end{itemize}
 
 \vspace{1em}
-Отличия T-SNE от SNE
+Отличия t-SNE от SNE
 \begin{itemize}
 \item Использует симметризованный критерий с более простым градиентом
 \item В целевом пространстве схожесть основана на t-распределении, а не на распределении Гаусса
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Критерий t-SNE}
+
+Схожесть между объектами в исходном пространстве
+\[
+p(i, j) = \frac{p(i | j) + p(j | i)}{2n}
+\]
+Схожесть между объектами в целевом пространстве
+\[
+q(i, j) = \frac{(1 + \| \mathbf{y}_i - \mathbf{y}_j \|^2)^{-1}}{\sum_{k \neq l}(1 + \| \mathbf{y}_k - \mathbf{y}_l \|^2)^{-1}}
+\]
+Критерий
+\[
+J_{t-SNE} = KL(P \| Q) = \sum_i \sum_j p(i, j) \log \frac{p(i, j)}{q(i, j)}
+\]
+
+\end{frame}
+
+\begin{frame}{t-распределение}
+
+\[
+\tau(\mu, \sigma^2, \nu) \propto \left[1 + \frac{1}{\nu}\left(\frac{x-\mu}{\sigma}\right)^2\right]^{-\frac{\nu+1}{2}}
+\]
+
+\begin{center}
+\includegraphics[scale=0.4]{images/t-distr.png}
+\end{center}
+
+Уильям Госсет 1908 (Student)
+
+\end{frame}
+
+\begin{frame}{Свойства критерия}
+
+\[
+\nabla_{\mathbf{y}_i} J_{t-SNE} = 4 \sum_{j} (p(i, j) - q(i, j)) (1 + \| \mathbf{y}_i - \mathbf{y}_j \|^2)^{-1}(\mathbf{y}_i - \mathbf{y}_j) 
+\]
+
+\begin{center}
+\includegraphics[scale=0.4]{images/grad_sne.png}
+\includegraphics[scale=0.4]{images/grad_tsne.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Digits Dataset}
+
+около 1800 картинок 8x8 с рукописными цифрами 
+
+\begin{center}
+\includegraphics[scale=0.5]{images/digits.png}
+\end{center}
+
+\href{https://raw.githubusercontent.com/oreillymedia/t-SNE-tutorial/master/images/animation.gif}{t-SNE}
+
+\end{frame}
+
+\begin{frame}{MNIST Dataset}
+
+70000 картинок 20x20 с рукописными цифрами 
+
+\begin{center}
+\includegraphics[scale=1.0]{images/mnistdigits.jpg}
+\end{center}
+
+\href{http://lvdmaaten.github.io/tsne/examples/mnist_tsne.jpg}{t-SNE}
+
+\end{frame}
+
+\begin{frame}{Еще примеры}
+
+\href{http://lvdmaaten.github.io/tsne/examples/caltech101_tsne.jpg}{CalTech}
+
+\vspace{1em}
+\href{http://lvdmaaten.github.io/tsne/examples/SP500_tsne.png}{S\&P 500}
+
+\vspace{1em}
+\href{http://www.cs.toronto.edu/~hinton/turian.png}{Words}
+
+\end{frame}
+
+\begin{frame}{Заключение}
+
+\begin{center}
+\includegraphics[scale=0.27]{images/mainfold.png}
+\end{center}
 
 \end{frame}
 
