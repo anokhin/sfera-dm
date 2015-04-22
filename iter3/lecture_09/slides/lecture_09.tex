@@ -1,0 +1,709 @@
+\documentclass[10pt]{beamer}
+
+\usetheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{etoolbox}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pifont}
+\usepackage{xcolor}
+\usepackage{framed}
+\definecolor{shadecolor}{cmyk}{0,0,0,1}
+\usepackage{multirow}
+
+\usepackage{listings}
+
+\lstset{
+	backgroundcolor=\color{lightgray},
+	commentstyle=\color{blue},
+	frame=single
+	breakatwhitespace, 
+	language=python, 
+	columns=fullflexible, 
+	keepspaces, 
+	breaklines, 
+	tabsize=3, 
+	showstringspaces=false, 
+	extendedchars=true,
+	numbers=left
+}
+
+\makeatletter
+
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamerfont*{title}{family=\sffamily,size=\LARGE}
+
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+\setbeamertemplate{footline}[frame number]
+\let\otp\titlepage
+\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+
+\setbeamertemplate{background canvas}{%
+	\ifnumequal{\c@framenumber}{0}{%
+      \includegraphics[width=\paperwidth,height=\paperheight]{images/cover.png}
+   }{%
+      \ifnumequal{\c@framenumber}{\inserttotalframenumber}{
+         \includegraphics[width=\paperwidth,height=\paperheight]{images/back.png}
+      }{%
+         % Other frames
+      }%
+   }%
+}
+
+\makeatother
+
+\beamertemplatenavigationsymbolsempty
+
+\author{Николай Анохин}
+\title{\newline \newline \newline Лекция 6 \\ Линейные модели \\ для классификации и регрессии}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{План занятия}
+\tableofcontents
+\end{frame}
+
+\begin{frame}{Постановка задачи}
+
+Пусть дан набор объектов $\mathcal{D} = \{(\mathbf{x}_i, y_i)\},
+\; \mathbf{x}_i \in \mathcal{X},
+\; y_i \in \mathcal{Y},
+\; i \in 1, \ldots, N$, полученный из неизвестной закономерности $y = f(\mathbf{x})$. Необходимо выбрать из семейства параметрических функций
+\[
+H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \}
+\]
+такую $h^*(\mathbf{x}) = h(\mathbf{x}, \theta^*)$, которая наиболее точно апроксимирует $f(\mathbf{x})$.
+
+\vspace{1em}
+Задачи
+\begin{itemize}
+\item Регрессия: $\mathcal{Y} = [a, b] \subset \mathbb{R}$
+\item Классификация: $|\mathcal{Y}| < C$
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\section{Линейная регрессия}
+
+% ============================================== %
+
+\begin{frame}{}
+
+\begin{center}
+\Large Линейная регрессия
+\end{center}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{columns}[C]
+    \begin{column}{.55\textwidth}
+    	Модель
+		\[
+			y = h(\mathbf{x}, \theta) + \epsilon,
+		\]
+		где $\epsilon$ -- гауссовский шум
+		\[
+			p(\epsilon) = \mathcal{N}(\epsilon | 0, \beta^{-1}),
+		\]
+		откуда
+		\[
+		p(y | \mathbf{x}, \theta, \beta) = \mathcal{N}(y | h(\mathbf{x}, \theta), \beta^{-1}).
+		\]
+		Предсказание
+		\[
+		E[y | \mathbf{x}] = \int y p(y | \mathbf{x}) d y = h(\mathbf{x}, \theta).
+ 		\]
+    \end{column}
+       
+    \begin{column}{.45\textwidth}
+	\begin{center}
+   		\includegraphics[scale=0.3]{images/empty_reg.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Линейная модель}
+
+\begin{columns}[C]
+    \begin{column}{.55\textwidth}
+    	простейшая модель
+    	\[
+    	h(\mathbf{x}, \mathbf{w}) = w_0 + w_1 x_1 + \ldots + w_M x_M = \sum_{j=0}^M w_j x_j
+    	\]
+    	улучшенная модель
+    	\[
+    	h(\mathbf{x}, \mathbf{w}) = \sum_{j=0}^M w_j \phi_j(\mathbf{x}) = \mathbf{w}^T \phi(\mathbf{x}),
+    	\]
+    	$\phi_j(\mathbf{x})$ -- базисные функции, $\phi_0(\mathbf{x}) = 1$ \\ \vspace{1em}
+    	примеры
+    	\[
+    	\varphi_j(x) = x^j, \quad
+    	\varphi_j(x) = \exp \left\{-\frac{(x - \mu_j)^2}{2 s^2} \right\}
+    	\]
+    \end{column}
+       
+    \begin{column}{.45\textwidth}
+	\begin{center}
+   		\includegraphics[scale=0.3]{images/full_reg.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{ML -- функция правдоподобия}
+
+Дана обучающая выборка $\mathcal{D} = (X, Y)$ из $N$ объектов $(\mathbf{x_n}, y_n)$
+
+\vspace{1em}
+Функция правдоподобия
+\[
+\log p(Y | X, \mathbf{w}, \beta) = \sum_{n=1}^N \log \mathcal{N}(y | \mathbf{w}^T \phi(\mathbf{x_n}), \beta^{-1}) = 
+\]
+\[
+= \frac{N}{2} \log \beta - \frac{N}{2} \log 2 \pi - \frac{\beta}{2} \sum_{n=1}^N \{y_n - \mathbf{w}^T \phi(\mathbf{x}_n)\}^2 \rightarrow \max_{\mathbf{w}, \beta}
+\]
+Квадратичная функция потерь
+\[
+E_D(\mathbf{w}) = \frac 1 2 \sum_{n=1}^N \{y_n - \mathbf{w}^T \phi(\mathbf{x}_n)\}^2 \rightarrow \min_{\mathbf{w}}
+\]
+
+\end{frame}
+
+\begin{frame}{ML -- решение}
+
+\[
+\log p(Y | X, \mathbf{w}, \beta)
+= \frac{N}{2} \log \beta - \frac{N}{2} \log 2 \pi - \frac{\beta}{2} \sum_{n=1}^N \{y_n - \mathbf{w}^T \phi(\mathbf{x}_n)\}^2 \rightarrow \max_{\mathbf{w}, \beta}
+\]
+Градиент
+\[
+\beta \sum_{n=1}^N \{y_n - \mathbf{w}^T \phi(\mathbf{x}_n)\} \phi(\mathbf{x_n})^T = 0
+\]
+Решение
+ \[
+ \mathbf{w}_{ML} = \mathbf{\Phi}^{\dagger} Y = (\mathbf{\Phi}^T \mathbf{\Phi})^{-1} \mathbf{\Phi}^T Y, \quad
+ \frac{1}{\beta_{ML}} = \frac{1}{N} \sum_{n=1}^N \{y_n - \mathbf{w}_{ML}^T \phi(\mathbf{x}_n)\}^2, 
+ \]
+ где
+ \[
+ \mathbf{\Phi} = \begin{pmatrix}
+ \phi_0(\mathbf{x_1}) & \ldots &  \phi_M(\mathbf{x_1}) \\
+ \phi_0(\mathbf{x_2}) & \ldots &  \phi_M(\mathbf{x_2}) \\
+ \ldots & \ldots & \ldots \\
+  \phi_0(\mathbf{x_N}) & \ldots &  \phi_M(\mathbf{x_N}) \\
+ \end{pmatrix}
+ \]
+
+\end{frame}
+
+\begin{frame}{Регуляризация}
+
+Функция потерь
+\[
+E(\mathbf{w}, \lambda) = E_D(\mathbf{w}) + \lambda E_W(\mathbf{w}),
+\]
+где (как и раньше)
+\[
+E_D(\mathbf{w}) = \frac 1 2 \sum_{n=1}^N \{y_n - \mathbf{w}^T \phi(\mathbf{x}_n)\}^2 \rightarrow \min_{\mathbf{w}},
+\]
+плюс регуляризация
+\[
+E_W(\mathbf{w}) = E_q(\mathbf{w}) = \sum_{j=1}^M |\mathbf{w}_j|^q
+\]
+Зоопарк
+\begin{itemize}
+\item $q = 1$ -- Lasso
+\item $q = 2$ -- Ridge (байесовский вывод: $p(\mathbf{w} | \alpha) = \mathcal{N}(\mathbf{w} | 0, \alpha^{-1} \mathbf{I})$)
+\item $E_W(\mathbf{w}) = \rho E_1(\mathbf{w}) + (1 - \rho) E_2(\mathbf{w})$ -- Elastic Net
+\end{itemize}
+
+\end{frame}
+
+% ============================================== %
+
+\section{Логистическая регрессия}
+
+% ============================================== %
+
+\begin{frame}{}
+
+\begin{center}
+\Large Логистическая регрессия
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Ирисы Фишера}
+
+\begin{center}
+\includegraphics[scale=0.1]{images/setosa.jpg} \;
+\includegraphics[scale=0.1]{images/versicolor.jpg} \;
+\includegraphics[scale=0.416]{images/virginica.jpg}
+\end{center}
+{\large \hspace{4.5em} Setosa \hspace{3.3em} Versicolor \hspace{2.5em} Virginica}
+
+\begin{exampleblock}{Задача}
+Определить вид ириса на основании длины чашелистика, ширины чашелистика, длины лепестка и ширины лепестка.
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}{Ирисы Фишера}
+
+\begin{center}
+\includegraphics[scale=0.2]{images/iris01.png} \;
+\includegraphics[scale=0.2]{images/iris23.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Многомерное нормальное распределение}
+
+\[
+\mathcal{N(\mathbf{x} | \mathbf{\mu}, \mathbf{\Sigma}}) = \frac{1}{(2 \pi)^{D/2}} \frac{1}{|\mathbf{\Sigma}|^{1/2}} \exp \left\{-\frac{1}{2}(\mathbf{x} - \mathbf{\mu})^T \Sigma^{-1} (\mathbf{x} - \mathbf{\mu})\right\}
+\]
+
+\vspace{0.7em}
+\begin{center}
+{\bf Параметры}
+\end{center}
+\quad${D}$-мерный вектор средних\qquad$D \times D$-мерная матрица ковариации 
+\[
+\mathbf{\mu} = \int \mathbf{x} p({\mathbf{x}}) d\mathbf{x}
+\qquad\qquad\qquad
+\mathbf{\Sigma} = E[(\mathbf{x} - \mathbf{\mu})(\mathbf{x} - \mathbf{\mu})^T]
+\]
+
+\end{frame}
+
+\begin{frame}{Генеративная модель}
+
+Рассматриваем 2 класса
+\[
+p(y_1 | x) = \frac{p(x | y_1) p(y_1)}{p(x | y_1) p(y_1) + p(x | y_2) p(y_2)} = \frac{1}{1 + e^{-a}} = \sigma(a)
+\]
+\[
+a = \ln \frac{p(x | y_1)p(y_1)}{p(x | y_2)p(y_2)}
+\]
+$\sigma(a)$ -- сигмоид-функция, $a = \ln (\sigma/(1-\sigma))$
+
+\begin{center}
+\includegraphics[scale=0.28]{images/sigmoid.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Случай нормальных распределений}
+
+Пусть 
+\[
+p(\mathbf{x} | y_k) = \mathcal{N}(\mathbf{x} | \mathbf{\mu}_k, \mathbf{\Sigma}),
+\]
+тогда
+\[
+p(y_1 | \mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x} + w_0),
+\]
+где
+\[
+\mathbf{w} = \mathbf{\Sigma}^{-1} (\mu_1 - \mu_2)
+\]
+\[
+w_0 = - \frac 1 2 \mu_1^T \mathbf{\Sigma}^{-1} \mu_1 + \frac 1 2 \mu_2^T \mathbf{\Sigma}^{-1} \mu_2 + \ln \frac{p(y_1)}{p(y_2)}
+\]
+Аналогичный результат для любых распределений из экспоненциального семейства
+
+\end{frame}
+
+\begin{frame}{Maximum Likelihood}
+
+\[
+p(y_1, \mathbf{x}) = p(y_1) p(\mathbf{x} | y_1) = \pi \mathcal{N}(\mathbf{x} | \mathbf{\mu}_1, \mathbf{\Sigma})
+\]
+\[
+p(y_2, \mathbf{x}) = p(y_2) p(\mathbf{x} | y_2) = (1 - \pi) \mathcal{N}(\mathbf{x} | \mathbf{\mu}_2, \mathbf{\Sigma})
+\]
+Функция правдоподобия
+\[
+p(Y, X | \pi, \mu_1, \mu_2, \mathbf{\Sigma}) = \prod_{n=1}^N \left[ \pi \mathcal{N}(\mathbf{x} | \mathbf{\mu}_1, \mathbf{\Sigma}) \right]^{y_n} \left[ (1 - \pi) \mathcal{N}(\mathbf{x} | \mathbf{\mu}_2, \mathbf{\Sigma}) \right]^{1 - y_n} 
+\]
+Максимизируя $\log p(Y, X | \pi, \mu_1, \mu_2, \mathbf{\Sigma})$, имеем
+\[
+\pi = \frac 1 N \sum_{n=1}^N y_n = \frac{N_1}{N_1 + N_2},
+\]
+\[
+\mu_1 = \frac{1}{N_1} \sum_{n=1}^N y_n \mathbf{x}_n, \quad
+\mu_2 = \frac{1}{N_2} \sum_{n=1}^N (1 - y_n) \mathbf{x}_n,
+\]
+аналогично для $\mathbf{\Sigma}$
+
+\end{frame}
+
+\begin{frame}{Обобщенная линеная модель}
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+    \vspace{2em}
+	Базисные функции $\phi_n(\mathbf{x})$
+\[
+\phi_n(\mathbf{x}) = \exp\left[ -\frac{(x - \mu_n)^2}{2 s^2}\right]
+\]
+Функция активации $f(a)$
+\[
+f(a) = \sigma(a)
+\]
+(Совсем) обобщенная линейная модель
+\[
+y(\mathbf{x}, \mathbf{w}) = f(\mathbf{w}^\top \phi(\mathbf{x}))
+\]
+
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-2em}
+	\begin{center}
+   		\includegraphics[scale=0.25]{images/nl.png}
+   		
+   		\includegraphics[scale=0.25]{images/l.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Логистическая регрессия}
+
+{\bf Дано.}
+\[
+\mathcal{D} = \{\phi_n = \phi(\mathbf{x}_n), y_n\}, \; y_n \in \{ 0,1\}, \; n = 1 \ldots N
+\]
+{\bf Модель.}
+\[
+p(y=1 | \phi) = \sigma(\mathbf{w}^\top \phi)
+\]
+функция правдоподобия (кросс-энтропия)
+\[
+l(\mathbf{w}) = \log \left[ \prod_{n=1}^N p^{y_n}(y=1 | \phi_n) (1 - p(y=1 | \phi_n))^{1 - y_n}\right] = 
+\]
+\[
+= \sum_{n=1}^N {y_n \log p(y=1 | \phi_n) + (1- y_n) \log (1 - p(y=1 | \phi_n))} = - J_c(\mathbf{w}) \rightarrow \max_{\mathbf{w}}
+\]
+Градиент
+\[
+\nabla J_c(\mathbf{w}) = \sum_{n=1}^N (p(y=1 | \phi_n) - y_n) \phi_n
+\]
+Гессиан
+\[
+\nabla^2 J_c(\mathbf{w}) = \sum_{n=1}^N p(y=1 | \phi_n) (1 - p(y=1 | \phi_n)) \phi_n \phi_n^T
+\]
+
+\end{frame}
+
+\defverbatim[colored]\gd{%
+\begin{lstlisting}[tabsize=4,basicstyle=\ttfamily]
+function gd(grad, a0, epsilon):
+	initialise eta(k)
+	k = 0
+	a = a0	 
+	do:
+		k = k + 1
+		a = a - eta(k) grad(a)
+	until eta(k) grad(a) < epsilon
+	return a
+\end{lstlisting}
+}
+
+\begin{frame}{Градиентный спуск}
+
+	\gd
+
+	\begin{center}
+   		\includegraphics[scale=0.4]{images/gd.png}   		
+    \end{center}
+    
+    Добавление момента: $\mathbf{a}_{k+1} = \mathbf{a}_k - \eta_k \nabla J (\mathbf{a}_k) + \mu_k (\mathbf{a}_{k} - \mathbf{a}_{k-1})$
+
+\end{frame}
+
+\defverbatim[colored]\newton{%
+\begin{lstlisting}[tabsize=4,basicstyle=\ttfamily]
+function newton(grad, hessian, a0, epsilon):
+	initialise eta(k)
+	k = 0
+	a = a0	 
+	do:
+		k = k + 1
+		g = grad(a)
+		H = hessian(a)
+		d = solve(H * d = -g) # find d = - inv(H) * g
+		a = a + eta(k) d
+	until convergence
+	return a
+\end{lstlisting}
+}
+
+\begin{frame}{Метод Ньютона}
+
+\[
+J(\mathbf{a}) \approx J(\mathbf{a}_k) + \nabla J(\mathbf{a}_k)^T (\mathbf{a} - \mathbf{a}_k) + \frac 1 2 (\mathbf{a} - \mathbf{a}_k)^T \nabla^2 J(\mathbf{a}_k) (\mathbf{a} - \mathbf{a}_k) \rightarrow \min_{\mathbf{a}}
+\]
+\[
+\mathbf{a} = \mathbf{a}_k - \nabla^2 J(\mathbf{a}_k)^{-1} \nabla J(\mathbf{a}_k)
+\]
+
+\newton
+
+BFGS -- использовать приближение $\nabla^2 J(\mathbf{a}_k)$ или $\nabla^2 J(\mathbf{a}_k)^{-1}$
+
+\end{frame}
+
+\begin{frame}{Iterative Reweighted Least Squares}
+
+Градиент и Гессиан логистической регрессии в матричной форме
+\[
+\nabla J_c(\mathbf{w}) = X^T (\sigma - Y)
+\]
+\[
+\nabla^2 J_c(\mathbf{w}) = X^T S X = X^T \text{diag}\{\sigma_n (1 - \sigma_n)\} X
+\]
+
+Обновление весов
+\[
+\mathbf{w}_{k+1} = \mathbf{w}_k - (X^T S_k X)^{-1} X^T S_k \mathbf{z}_k,
+\]
+\[
+\mathbf{z}_k = X \mathbf{w}_k + S^{-1}_k (Y - \sigma_k)
+\]
+Минимизация
+\[
+\sum_{n=1}^N S_{kn} (z_{kn} - \mathbf{w}^T x_n)^2
+\]
+
+\end{frame}
+
+\begin{frame}{Логистическая регрессия: результаты}
+
+	\begin{center}
+   		\includegraphics[scale=0.2]{images/lr01.png}\;   		
+   		\includegraphics[scale=0.2]{images/lr12.png}
+    \end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\section{Обобщенные линейные модели}
+
+% ============================================== %
+
+\begin{frame}{}
+
+\begin{center}
+\Large Обобщенные линейные модели
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Линейные модели}
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+	Рассматривается случай 2 классов
+	\vspace{0.3em} 
+    
+    Функция принятия решения
+    \[
+    y(\mathbf{x}) = \mathbf{w}^\top \mathbf{x} + w_0
+    \]
+    Регионы принятия решения
+    \[
+    R_1 = \{\mathbf{x}\,:\,y(\mathbf{x}) > 0\}
+    \]
+    \[
+    R_2 = \{\mathbf{x}\,:\,y(\mathbf{x}) < 0\}
+    \]
+    Задача
+    
+    найти параметры модели $\mathbf{w}$, $w_0$
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[scale=0.3]{images/linear.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Линейные модели: наблюдения}
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+	Разделяющая поверхность
+	\vspace{0.3em}
+	\[
+	\mathcal{D} = \{\mathbf x\,:\,\mathbf w^\top \mathbf x + w_0 = 0\}
+	\]	
+	
+	\begin{enumerate}	
+	\item $\mathbf{w}$ -- нормаль к $\mathcal{D}$
+	
+	\item $d = -\frac{w_0}{\|\mathbf{w}\|}$ -- расстояние от центра координат до $\mathcal{D}$
+	
+	\item $r(\mathbf{x}) = \frac{y(x)}{\|\mathbf{w}\|}$ -- расстояние от $\mathcal{D}$ до $\mathbf{x}$	
+	\end{enumerate}
+	
+	Положим $x_0 \equiv 1$, получим модель
+	\[
+	y(\tilde{\mathbf{x}}) = \tilde{\mathbf w}^\top \tilde{\mathbf{x}}
+	\] 
+    
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{-0em}
+	\begin{center}
+   		\includegraphics[scale=0.3]{images/linear.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Обобщенные линейные модели}
+
+Линейная модель
+\[
+y(\mathbf{x}) = w_0 + \sum w_i x_i
+\]
+Квадратичная модель
+\[
+y(\mathbf{x}) = w_0 + \sum w_i x_i + \sum \sum w_{ij} x_i x_j
+\]
+Обобщенная линейная модель
+\[
+g(\mathbf{x}) = \sum a_i \phi_i(\mathbf{x}) = \mathbf{a}^\top \mathbf{y}
+\]
+
+\end{frame}
+
+\begin{frame}{Случай линейно разделимых классов}
+
+Обобщенная линейная модель
+\[
+g(\mathbf{x}) = \sum a_i \phi_i(\mathbf{x}) = \mathbf{a}^\top \mathbf{y}
+\]
+Дана обучающая выборка $\mathbf{Y} = \{\mathbf{y}_1, \ldots, \mathbf{y}_N\}$
+
+\begin{center}
+\includegraphics[scale=0.35]{images/optimzation.png}
+\end{center}
+
+\begin{exampleblock}{Идея}
+Преобразовать объекты второго класса в обратные им и решать задачу оптимизации в области $a^T \mathbf{y}_i > 0, \; \forall i$
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}{Задача оптимизации}
+
+\begin{block}{Задача}
+Минимизируем критерий $J(a)$ при условиях $a^T \mathbf{y}_i > 0, \; \forall i$
+\end{block}
+
+Пусть $\mathcal{Y}$ -- множество неправильно проклассифицированных объектов
+\begin{itemize}
+\item $J_e(a) = \sum_{\mathbf{y} \in \mathcal{Y}} 1$ 
+\item $J_p(a) = \sum_{\mathbf{y} \in \mathcal{Y}} - a^\top \mathbf{y}$ 
+\item $J_q(a) = \sum_{\mathbf{y} \in \mathcal{Y}} (a^\top \mathbf{y})^2$
+\item $J_r(a) = \sum_{\mathbf{y} \in \mathcal{Y}} \frac{(a^\top \mathbf{y})^2 - b}{\|\mathbf{y}\|}$
+\end{itemize}
+Улучшение: добавить отступы
+
+\end{frame}
+
+\begin{frame}{Случай линейно неразделимых классов}
+
+\begin{itemize}
+\item Использовать $\eta(k) \rightarrow 0$ при $k \rightarrow \infty$
+\item От системы неравенств перейти к системе линейных уравнений
+\item Линейное программирование
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Снова переобучение}
+
+Оптимизируем критерий с регуляризацией
+\[
+J_1(a) = J(a) + \lambda J_R(a)
+\]
+$\lambda$ -- коэффициент регуляризации
+\[
+J_R(a) = \sum |a_j|^q
+\]
+\begin{center}
+\includegraphics[scale=0.3]{images/regularization.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Перцептрон: результаты}
+
+	\begin{center}
+   		\includegraphics[scale=0.2]{images/perc01.png}\;   		
+   		\includegraphics[scale=0.2]{images/perc12.png}
+    \end{center}
+
+\end{frame}
+
+\begin{frame}{Задача: Мультикласс классификация}
+
+\begin{itemize}
+\item one-vs-rest \\
+{\it Строим $K$ моделей, каждая соответствует одному классу}
+\item one-vs-one \\
+{\it Строим $K(K-1)/2$ моделей, каждая соответствует паре классов}
+\end{itemize}
+
+Задача
+\begin{itemize}
+\item Скачать шаблон кода \url{http://bit.ly/1DvG6hh}
+\item Реализовать схему one-vs-one
+\begin{itemize}
+\item Нарисовать раздляющие поверхности на графиках
+\item Посчитать итоговую accuracy
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{center}
+\Large Вопросы
+\end{center}
+
+\end{frame}
+
+\end{document}
