@@ -11,7 +11,7 @@
 \usepackage{graphicx}
 \usepackage{etoolbox}
 \usepackage{caption}
-\usepackage{subcaption}
+%\usepackage{subcaption}
 \usepackage{pifont}
 \usepackage{xcolor}
 \usepackage{framed}
@@ -63,7 +63,7 @@
 \beamertemplatenavigationsymbolsempty
 
 \author{Николай Анохин}
-\title{\newline \newline \newline Лекция 6 \\ Линейные модели \\ для классификации и регрессии}
+\title{\newline \newline \newline Лекция 9 \\ Линейные модели \\ для классификации и регрессии}
 
 \begin{document}
 
@@ -111,7 +111,7 @@ H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \
 
 \begin{frame}{}
 
-\begin{columns}[C]
+\begin{columns}[c]
     \begin{column}{.55\textwidth}
     	Модель
 		\[
@@ -142,7 +142,7 @@ H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \
 
 \begin{frame}{Линейная модель}
 
-\begin{columns}[C]
+\begin{columns}[c]
     \begin{column}{.55\textwidth}
     	простейшая модель
     	\[
@@ -372,7 +372,7 @@ f(a) = \sigma(a)
 \]
 (Совсем) обобщенная линейная модель
 \[
-y(\mathbf{x}, \mathbf{w}) = f(\mathbf{w}^\top \phi(\mathbf{x}))
+y(\mathbf{x}, \mathbf{w}) \sim Dist\left( f(\mathbf{w}^\top \phi(\mathbf{x})) \right)
 \]
 
     \end{column}
@@ -677,23 +677,13 @@ J_R(a) = \sum |a_j|^q
 
 \end{frame}
 
-\begin{frame}{Задача: Мультикласс классификация}
+\begin{frame}{Мультикласс классификация}
 
 \begin{itemize}
 \item one-vs-rest \\
 {\it Строим $K$ моделей, каждая соответствует одному классу}
 \item one-vs-one \\
 {\it Строим $K(K-1)/2$ моделей, каждая соответствует паре классов}
-\end{itemize}
-
-Задача
-\begin{itemize}
-\item Скачать шаблон кода \url{http://bit.ly/1DvG6hh}
-\item Реализовать схему one-vs-one
-\begin{itemize}
-\item Нарисовать раздляющие поверхности на графиках
-\item Посчитать итоговую accuracy
-\end{itemize}
 \end{itemize}
 
 \end{frame}
