@@ -11,7 +11,7 @@
 \usepackage{graphicx}
 \usepackage{etoolbox}
 \usepackage{caption}
-\usepackage{subcaption}
+%\usepackage{subcaption}
 \usepackage{pifont}
 \usepackage{xcolor}
 \usepackage{framed}
@@ -63,7 +63,7 @@
 \beamertemplatenavigationsymbolsempty
 
 \author{Николай Анохин}
-\title{\newline \newline \newline Лекция 10 \\ Машина опорных векторов}
+\title{\newline \newline \newline Лекция 10 \\ Машины опорных векторов}
 
 \begin{document}
 
@@ -299,6 +299,11 @@ $\mathbf{x}_2$ & $1$ & $2$ & $-1$ \\
     \[
     C \sum_{j=1}^N \xi_j + \frac{1}{2}\|\mathbf{w}\|^2 \rightarrow \min_{\mathbf{w}, b}
     \]
+    при условиях
+    \[
+		t_j y(\mathbf{x}_j) \geq 1 - \xi_j, \;\; \xi_j \geq 0
+		\]
+
 	
     \end{column}
        
@@ -489,7 +494,7 @@ k(\mathbf{x}, \mathbf{z}) = \tanh (\gamma \mathbf{x}^\top\mathbf{z} + r)
 
 Задача оптимизации 
 \[
-С \sum_{j=1}^N \xi_j + \frac{1}{2} \|w\|^2 \sim \sum_{j=1}^N E(y(\mathbf{x}_j), t_j) + \lambda \|w\|^2 \rightarrow \min_{\mathbf{w}, b}
+C \sum_{j=1}^N \xi_j + \frac{1}{2} \|w\|^2 \sim \sum_{j=1}^N E(y(\mathbf{x}_j), t_j) + \lambda \|w\|^2 \rightarrow \min_{\mathbf{w}, b}
 \]
 Hinge loss
 \[
@@ -549,34 +554,6 @@ Q(z, w + \delta) \approx Q(z, w) + \delta g
 \item[-] Нет алгоритма выбора ядра
 \item[-] Медленное обучение
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}[fragile]{Эксперименты над SVM}
-
-В задаче рассматриваются 4 алгоритма генерации обучающих выборок. Требуется разработать функцию, автоматически подбирающую параметры модели SVM в зависимости от полученной выборки.
-
-\begin{small}
-\vspace{1em}
-Инструкция по выполнению задания
-\begin{enumerate}
-\item Скачать код \url{http://bit.ly/1y26EF4}
-\item Запустить хелп, при желании изучить
-\begin{shaded}
-{\color{green} \begin{verbatim}
-$ python svm.py -h
-$ python svm.py cc -h
-\end{verbatim}}
-\end{shaded}
-\item Запустить какой-нибудь пример, разобраться с картинкой
-\begin{shaded}
-{\color{green} \begin{verbatim}
-$ python svm.py gauss
-\end{verbatim}}
-\end{shaded}
-\item Работать над кодом (функция \texttt{select\_model})
-\end{enumerate}
-\end{small}
 
 \end{frame}
 
