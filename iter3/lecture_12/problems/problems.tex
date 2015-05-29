@@ -1,0 +1,65 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\author{Николай Анохин}
+
+\begin{document}
+
+\subsection*{Задача 1. Ridge Regression} 
+
+Ridge regression -- модель, идентичная обычной линейной регрессии, но с добавленной $L_2$ регуляризацией. Обозначим $X: n \times m$ матрицу признаковых описаний объектов,  $Y: n$ --  вектор значений целевой переменной,  $\mathbf{w}$ -- вектор весов (параметров модели), $\lambda$ -- параметр регуляризации. Покажите, что оптимальное $\mathbf{w}$ выражается как
+\[
+\mathbf{w} = (X X^T + \lambda I)^{-1} X Y
+\]
+
+\subsection*{Задача 2. Softmax классификатор}
+
+Для того чтобы распространить логистическую регрессию на случай задачи классификации с $m$ классами, смоделируем вероятность принадлежности к $k \in 1 \ldots m$ классу с помощью softmax-функции
+\[
+p(y_k | x) = \frac{\exp(a_k)}{\sum_{j=1}^m\exp(a_j)}, \quad a_k = \mathbf{w}^T \mathbf{x}
+\]
+Для такой модели выпишите функцию правдоподобия и выражение для ее градиента.
+
+\subsection*{Задача 3. SVM}
+
+Сопоставьте формулировки задач SVM (слева) и полученные разделяющие поверхности (справа). Аргументируйте свой ответ.
+
+\begin{center}
+\includegraphics[scale=0.38]{images/svm_equations.png}
+\includegraphics[scale=0.35]{images/svm_plots.png}
+\end{center}
+
+\newpage
+
+\subsection*{Задача 4.  Naive Bayes}
+
+С помощью алгоритма Naive Bayes предскажите значение целевой переменной $buy\_computer$ для объекта со следующими значениями признаков:
+
+\begin{verbatim}
+age <= 30 & income = medium & student = yes & credit-rating = fair
+\end{verbatim}
+
+Для обучения модели используйте данные из таблицы и сглаживане Лапласа.
+
+\begin{center}
+\includegraphics[scale=0.8]{images/nb.png}
+\end{center}
+
+\subsection*{Задача 5.  Решающие деревья}
+
+С помощью алгоритма CART постройте первыe два уровня дерева решений на основании представленных данных. Используйте gini impurity.
+
+\begin{center}
+\includegraphics[scale=0.8]{images/dt.png}
+\end{center}
+ 
+\end{document}
