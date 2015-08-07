@@ -1,4 +1,4 @@
-\documentclass[11pt]{beamer}
+\documentclass[aspectratio=169]{beamer}
 %\usetheme{Marburg}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -7,6 +7,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{mathtools}
 
 \author{Николай Анохин}
 
@@ -29,7 +30,7 @@
 \begin{frame}{Data Mining как KDD}
 
 \begin{quote}{Knowledge Discovery in Databases (KDD)}
--- это процесс получения точных, неизвестных, потенциально полезных и интерпретируемых закономерностей из данных.\footnote{U. Fayyad, G. Piatetsky-Shapiro, P. Smyth. From data mining to knowledge discovery: an overview. 1996}
+-- это процесс получения точных, неизвестных, потенциально полезных и интерпретируемых закономерностей из данных.\footnote{U. Fayyad, G. Piatetsky-Shapiro, P. Smyth. From data mining to knowledge discovery: an overview. 1996\vspace{3em}}
 \end{quote}
 
 \end{frame}
@@ -49,13 +50,53 @@
 
 \end{frame}
 
-\begin{frame}{Пример 1. Книга -- лучший подарок}
+\begin{frame}{Пример 1. Красная икра на новогодний стол}
 
+\vspace{-8em}
+
+\begin{center}
+\begin{small}
 \begin{tabular}{l | c | c | c | c | c | c | c | c | c | c |}
-PRML / C. Bishop \\
-\hline
-Ulysses / J. Joyce
+настоящая & 446 & 521 & 550 & 315 & 613 & 292 & 469 & 658 & 255 & 310 \\
+искусственная & 372 & 351 & 361 & 398 & 348 & 457 & 370 & 473 & 475 & 435
 \end{tabular}
+\end{small}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Пример 1. Красная икра на новогодний стол}
+
+\begin{center}
+\begin{small}
+\begin{tabular}{l | c | c | c | c | c | c | c | c | c | c |}
+настоящая & 446 & 521 & 550 & 315 & 613 & 292 & 469 & 658 & 255 & 310 \\
+искусственная &372 & 351 & 361 & 398 & 348 & 457 & 370 & 473 & 475 & 435
+\end{tabular}
+\end{small}
+\end{center}
+
+{\bf Статистический подход}
+\[
+\begin{cases}
+p( \text{цена} | \text{настоящая}) \sim \mathcal{N}(\text{цена} | \mu_r, \sigma_r) \\
+p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{цена} | \mu_a, \sigma_a)
+\end{cases} 
+\xRightarrow{MLE} \;\;\;
+\begin{cases} 
+\mu_r=443, \sigma_r=136 \\ 
+\mu_a=404, \sigma_a=49 
+\end{cases}
+\]
+
+{\bf Машинное обучение}
+
+\hspace{1em}Обучаем линейный SVM: $\text{цена} > 482 \Rightarrow \text{настоящая}$
+
+\vspace{1em}
+{\bf Вычислительный подход}
+
+\hspace{1em}Посчитываем параметры данных: $ \langle \text{цена}_r \rangle = 443, \langle \text{цена}_a \rangle = 404$
 
 \end{frame}
 
@@ -73,7 +114,7 @@ Ulysses / J. Joyce
 \item[1960-е] Data Fishing, Data Dredging
 \item[1980-е] Knowledge Discovery in Databases
 \item[1990-е] Data Mining, Database mining\textsuperscript{TM}
-\item[2000-е] Data Analytics, Data Science\footnote{\href{https://twitter.com/nivertech/status/180109930139893761}{Data Scientist is a Data Analyst who lives in California}}\footnote{\href{https://twitter.com/josh_wills/status/198093512149958656}{A data scientist is someone who is better at statistics than any software engineer and better at software engineering than any statistician.}}
+\item[2000-е] Data Analytics, Data Science\footnote{\href{https://twitter.com/nivertech/status/180109930139893761}{Data Scientist is a Data Analyst who lives in California}}\footnote{\href{https://twitter.com/josh_wills/status/198093512149958656}{A data scientist is someone who is better at statistics than any software engineer and better at software engineering than any statistician.}\vspace{3em}}
 \end{enumerate}
 
 \end{frame}
