@@ -52,21 +52,6 @@
 
 \begin{frame}{Пример 1. Красная икра на новогодний стол}
 
-\vspace{-8em}
-
-\begin{center}
-\begin{small}
-\begin{tabular}{l | c | c | c | c | c | c | c | c | c | c |}
-настоящая & 446 & 521 & 550 & 315 & 613 & 292 & 469 & 658 & 255 & 310 \\
-искусственная & 372 & 351 & 361 & 398 & 348 & 457 & 370 & 473 & 475 & 435
-\end{tabular}
-\end{small}
-\end{center}
-
-\end{frame}
-
-\begin{frame}{Пример 1. Красная икра на новогодний стол}
-
 \begin{center}
 \begin{small}
 \begin{tabular}{l | c | c | c | c | c | c | c | c | c | c |}
@@ -96,19 +81,19 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 \vspace{1em}
 {\bf Вычислительный подход}
 
-\hspace{1em}Посчитываем параметры данных: $ \langle \text{цена}_r \rangle = 443, \langle \text{цена}_a \rangle = 404$
+\hspace{1em}Подсчитываем параметры данных: $ \langle \text{цена}_r \rangle = 443, \langle \text{цена}_a \rangle = 404$
 
 \end{frame}
 
-\begin{frame}{Некоторые важные события в истории Data Mining}
+\begin{frame}{Data Mining -- область на пересечении дисциплин\footnote{\href{http://blogs.sas.com/content/subconsciousmusings/2014/08/22/looking-backwards-looking-forwards-sas-data-mining-and-machine-learning/}{Looking backwards, looking forwards: SAS, data mining, and machine learning}\vspace{1.5em}}}
 
-\begin{enumerate}
-\item[1989] IJCAI-89 Workshop on Knowledge Discovery in Databases 
-\end{enumerate}
+\begin{center}
+\includegraphics[width=0.75\textwidth]{images/data-mining-venn.png}
+\end{center}
 
 \end{frame}
 
-\begin{frame}{Data Mining -- дисциплина тысячи имен}
+\begin{frame}{Data Mining -- область тысячи имен}
 
 \begin{enumerate}
 \item[1960-е] Data Fishing, Data Dredging
@@ -116,6 +101,130 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 \item[1990-е] Data Mining, Database mining\textsuperscript{TM}
 \item[2000-е] Data Analytics, Data Science\footnote{\href{https://twitter.com/nivertech/status/180109930139893761}{Data Scientist is a Data Analyst who lives in California}}\footnote{\href{https://twitter.com/josh_wills/status/198093512149958656}{A data scientist is someone who is better at statistics than any software engineer and better at software engineering than any statistician.}\vspace{1.5em}}
 \end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Некоторые важные события в истории Data Mining}
+
+\begin{enumerate}
+\item[1989] IJCAI-89 Workshop on Knowledge Discovery in Databases 
+\item[1995] ACM SIGKDD Conference on Knowledge Discovery and Data Mining
+\item[2003] Программа Total Information Awareness
+\item[2001] Leo Breiman's ``Statistical Modeling: The Two Cultures''
+\item[2005] Doug Cutting и Mike Cafarella разработали пакет обработки данных Hadoop
+\item[2007] Первый релиз библиотки scikit-learn
+\item[2010] Заработал сайт Kaggle -- платформа для проведения соревнований по Data Science
+\item[2012] Harvard Business Review публикует статью Data Scientist: The Sexiest Job of the 21st Century
+\item[2013] Первая встреча сообщества Moscow Data Science\footnote{\url{http://www.meetup.com/Moscow-Data-Science/}\vspace{1.5em}} в московском офисе Mail.Ru Group
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{CRISP-DM}
+
+(Cross Industry Standard Process for Data Mining)
+
+\begin{center}
+\includegraphics[height=0.7\textheight]{images/crisp.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Пример 2. Игра в гольф}
+
+{\bf Business understanding}
+\begin{itemize}
+\item понимание задачи с точки зрения бизнеса
+\item сбор требований и ограничений
+\item постановка задачи в терминах Data Mining
+\end{itemize}
+
+\vspace{1em}
+
+{\bf Data understanding}
+\begin{itemize}
+\item первичный сбор данных
+\item ознакомление с данными и понимание их специфики
+\end{itemize}
+
+\vspace{1em}
+
+{\bf Data preparation}
+\begin{itemize}
+\item формирование финального набора данных
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Игра в гольф: данные}
+
+\begin{center}
+\begin{tabular}{c | c | c | c | c }
+\bf Outlook & \bf Temperature & \bf Humidity & \bf Wind & \bf Play \\
+\hline
+Sunny & 85 & 85 & false & no \\
+Sunny & 80 & 90 & true & no \\
+Overcast & 83 & 86 & false & yes \\
+Rainy & 70 & 96 & false & yes \\
+Rainy & 68 & 80 & false & yes \\
+Rainy & 65 & 70 & true & no \\
+Overcast & 64 & 65 & true & yes \\
+Sunny & 72 & 95 & false & no \\
+Sunny & 69 & 70 & false & yes \\
+Rainy & 75 & 80 & false & yes \\
+Sunny & 75 & 70 & true & yes \\
+Overcast & 72 & 90 & true & yes \\
+Overcast & 81 & 75 & false & yes \\
+Rainy & 71 & 91 & true & no \\
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Признаки}
+
+$\mathcal{D}$ -- множество, содержащее все рассматриваемые в задаче объекты \\
+$d \in \mathcal{D}$ --  объект,  $\phi_j: \mathcal{D} \rightarrow F_j$ -- признак
+    
+\vspace{1em}
+Виды признаков
+\begin{itemize}
+\item Бинарные/Binary \\ $F_j = \{true, false\}$
+\item Номинальные/Categorical \\ $F_j$ -- конечно
+\item Порядковые/Ordinal \\ $F_j$ -- конечно, упорядочено
+\item Количественные/Numerical \\ $F_j = \mathbb{R}$
+\end{itemize}
+\vspace{1em}
+Признаковое представление объекта $d_i$
+\[
+\mathbf{x}_i = (\phi_1(d_i), \ldots, \phi_n(d_i)) \in \mathcal{X}
+\]
+
+
+\end{frame}
+
+\begin{frame}{Моделирование}
+
+\begin{itemize}
+\item Перебор различных вариантов моделирования
+\item Настройка парамтров моделей
+\end{itemize}
+\begin{block}{Модель}
+    семейство параметрических функций вида
+    \[
+    H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \}
+    \]    
+    \end{block}
+\begin{block}{Алгоритм обучения}
+    выбор наилучших параметров $\theta^*$ с использованием обучающей выборки
+    \[
+    A(X, Y): (\mathcal{X} \times \mathcal{Y})^N \rightarrow \Theta
+    \]    
+    \end{block}
+В итоге:
+\[
+h^*(\mathbf{x}) = h(\mathbf{x}, \theta^*)
+\]
 
 \end{frame}
 
