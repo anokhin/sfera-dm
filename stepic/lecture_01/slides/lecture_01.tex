@@ -8,6 +8,9 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{empheq}
+\usepackage[many]{tcolorbox}
 
 \author{Николай Анохин}
 
@@ -18,6 +21,8 @@
 %\institute{} 
 \date{} 
 %\subject{}
+
+\tcbset{highlight math style={enhanced,colframe=red,colback=white,arc=4pt,boxrule=1pt}}
 
 \begin{document}
 
@@ -130,33 +135,90 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 
 \end{frame}
 
-\begin{frame}{Пример 2. Игра в гольф}
+\begin{frame}{Пример 2. Игра в гольф\footnote{Induction of Decision Trees / R. Quinlan\vspace{1.5em}}}
 
-{\bf Business understanding}
-\begin{itemize}
-\item понимание задачи с точки зрения бизнеса
-\item сбор требований и ограничений
-\item постановка задачи в терминах Data Mining
-\end{itemize}
-
-\vspace{1em}
-
-{\bf Data understanding}
-\begin{itemize}
-\item первичный сбор данных
-\item ознакомление с данными и понимание их специфики
-\end{itemize}
-
-\vspace{1em}
-
-{\bf Data preparation}
-\begin{itemize}
-\item формирование финального набора данных
-\end{itemize}
+\begin{columns}
+    \begin{column}{.7\textwidth}
+    \begin{small}
+    	{\bf Business understanding}
+		\begin{itemize}
+		\item понимание задачи с точки зрения бизнеса
+		\item сбор требований и ограничений
+		\item постановка задачи в терминах Data Mining
+		\end{itemize}
+		
+		$\mathcal{D}$ -- множество, содержащее все рассматриваемые в задаче объекты \\  \vspace{1em}
+		$f: \mathcal{D} \rightarrow \mathcal{Y}$ -- целевая функция \\ \vspace{1em}
+		
+		Цель -- с использованием данных о конечном множестве объектов из $\mathcal{D}$ (data set) научиться предсказывать значения целевой функции для любых объектов из $\mathcal{D}$
+		
+		\vspace{1em}
+		Задача {\bf с учителем} -- для объектов из data set дано значение целевой функции, иначе -- задача {\bf без учителя}.	
+				\end{small}
+		
+    \end{column}
+    %   
+    \begin{column}{.3\textwidth}
+    \vspace{-0em}
+		\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp.png}
+    \end{center}
+    \end{column}
+  \end{columns}
 
 \end{frame}
 
-\begin{frame}{Игра в гольф: данные}
+\begin{frame}{Пример 2. Игра в гольф}
+
+\begin{columns}
+    \begin{column}{.7\textwidth}
+		{\bf Data understanding}
+		\begin{itemize}
+		\item первичный сбор данных
+		\item ознакомление с данными и понимание их специфики
+		\end{itemize}
+		
+		\vspace{1em}
+
+		{\bf Data preparation}
+		\begin{itemize}
+		\item формирование финального набора данных
+		\end{itemize}
+    \end{column}
+    %   
+    \begin{column}{.3\textwidth}
+    \vspace{-0em}
+		\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Признаки}
+
+$\mathcal{D}$ -- множество, содержащее все рассматриваемые в задаче объекты \\
+$d \in \mathcal{D}$ --  объект,  $\phi_j: \mathcal{D} \rightarrow F_j$ -- признак
+    
+\vspace{1em}
+Виды признаков
+\begin{itemize}
+\item Бинарные/Binary \\ $F_j = \{true, false\}$
+\item Номинальные/Categorical \\ $F_j$ -- конечне
+\item Порядковые/Ordinal \\ $F_j$ -- конечное, упорядоченное
+\item Количественные/Numerical \\ $F_j = \mathbb{R}$
+\end{itemize}
+\vspace{1em}
+Признаковое представление объекта $d$
+\[
+\mathbf{x} = (\phi_1(d), \ldots, \phi_n(d)) \in \mathcal{X}
+\]
+
+
+\end{frame}
+
+\begin{frame}{Игра в гольф: признаки}
 
 \begin{center}
 \begin{tabular}{c | c | c | c | c }
@@ -181,50 +243,141 @@ Rainy & 71 & 91 & true & no \\
 
 \end{frame}
 
-\begin{frame}{Признаки}
+\begin{frame}{Моделирование}
 
-$\mathcal{D}$ -- множество, содержащее все рассматриваемые в задаче объекты \\
-$d \in \mathcal{D}$ --  объект,  $\phi_j: \mathcal{D} \rightarrow F_j$ -- признак
-    
-\vspace{1em}
-Виды признаков
-\begin{itemize}
-\item Бинарные/Binary \\ $F_j = \{true, false\}$
-\item Номинальные/Categorical \\ $F_j$ -- конечно
-\item Порядковые/Ordinal \\ $F_j$ -- конечно, упорядочено
-\item Количественные/Numerical \\ $F_j = \mathbb{R}$
+\begin{columns}
+\begin{column}{.7\textwidth}
+    \begin{itemize}
+\item перебор различных моделей
+\item настройка параметров моделей
 \end{itemize}
-\vspace{1em}
-Признаковое представление объекта $d_i$
-\[
-\mathbf{x}_i = (\phi_1(d_i), \ldots, \phi_n(d_i)) \in \mathcal{X}
-\]
 
+\begin{block}{Модель}
+признаковое описание объекта $d$:
+\[
+\mathbf{x} = (\phi_1(d), \ldots, \phi_n(d)) \in \mathcal{X}
+\]
+значение целевой функции для объекта $d$: $y \in \mathcal{Y}$
+
+\vspace{1em}
+{\bf модель} -- семейство функций вида
+\begin{empheq}[box=\tcbhighmath]{align}
+H = \{h(\mathbf{x}, \theta) \,:\, \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \},\nonumber
+\end{empheq}
+где $\theta \in \Theta$ -- неизвестный вектор параметров
+
+\end{block}
+    \end{column}
+    %   
+    \begin{column}{.3\textwidth}
+    \vspace{-0em}
+		\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+    
+\end{frame}
+
+\begin{frame}{Пример 1. Снова банки с икрой}
+    
+{\bf признаковое описание}: $\mathbf{x} \in \mathbb{R}^1$ \\
+\vspace{1em}
+{\bf целевая переменная}: $y = 1$, если настоящая, $y = 0$ иначе \\
+\vspace{1em}
+{\bf модель}:
+\[
+\begin{cases}
+p(\mathbf{x} | C_0) \sim \mathcal{N}(\mathbf{x} | \mu_0, \sigma_0), \;\; p(C_0) = \frac 1 2 \\
+p(\mathbf{x} | C_1) \sim \mathcal{N}(\mathbf{x} | \mu_1, \sigma_1), \;\; p(C_1) = \frac 1 2
+\end{cases} \;\; + \quad y = \mathcal{I}(p(C_1 | \mathbf{x}) > p(C_1 | \mathbf{x}))
+\]
+\vspace{1em}
+{\bf параметры}: $\theta = (\mu_1, \sigma_1, \mu_0, \sigma_0)$
 
 \end{frame}
 
-\begin{frame}{Моделирование}
+\begin{frame}{Пример 2. Дерево решений}
+    
+\begin{columns}
+\begin{column}{.5\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/dtree.png}
+\end{center}
+\end{column}
+%   
+\begin{column}{.5\textwidth}
+\begin{tiny}
+\begin{center}
+\begin{tabular}{c | c | c | c | c }
+\bf Outlook & \bf Temperature & \bf Humidity & \bf Wind & \bf Play \\
+\hline
+Sunny & 85 & 85 & false & no \\
+Sunny & 80 & 90 & true & no \\
+Overcast & 83 & 86 & false & yes \\
+Rainy & 70 & 96 & false & yes \\
+Rainy & 68 & 80 & false & yes \\
+Rainy & 65 & 70 & true & no \\
+Overcast & 64 & 65 & true & yes \\
+Sunny & 72 & 95 & false & no \\
+Sunny & 69 & 70 & false & yes \\
+Rainy & 75 & 80 & false & yes \\
+Sunny & 75 & 70 & true & yes \\
+Overcast & 72 & 90 & true & yes \\
+Overcast & 81 & 75 & false & yes \\
+Rainy & 71 & 91 & true & no \\
+\end{tabular}
+\end{center}
+\end{tiny}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Обучение модели}
 
 \begin{itemize}
-\item Перебор различных вариантов моделирования
-\item Настройка параметров моделей
+\item дана обучающая выборка (data set) $X = \{{\mathbf{x}_1, \ldots, \mathbf{x_n}}\}$
+\item для каждого из объектов обучающей выборки дано значение целевой функции $Y = \{y_1, \ldots, y_n\}$ (если задача с учителем)
 \end{itemize}
-\begin{block}{Модель}
-    семейство параметрических функций вида
-    \[
-    H = \{h(\mathbf{x}, \theta): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \}
-    \]    
-    \end{block}
+
 \begin{block}{Алгоритм обучения}
-    выбор наилучших параметров $\theta^*$ с использованием обучающей выборки
-    \[
-    A(X, Y): (\mathcal{X} \times \mathcal{Y})^N \rightarrow \Theta
-    \]    
-    \end{block}
+Выбор наилучших параметров $\theta^*$ с использованием обучающей выборки
+\[
+A(X, Y): (\mathcal{X} \times \mathcal{Y})^N \rightarrow \Theta
+\]
 В итоге:
 \[
 h^*(\mathbf{x}) = h(\mathbf{x}, \theta^*)
 \]
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Пример 2. Игра в гольф}
+
+\begin{columns}
+    \begin{column}{.7\textwidth}
+		{\bf Evaluation}
+		\begin{itemize}
+		\item 
+		\end{itemize}
+		
+		\vspace{1em}
+
+		{\bf Deployment}
+		\begin{itemize}
+		\item 
+		\end{itemize}
+    \end{column}
+    %   
+    \begin{column}{.3\textwidth}
+    \vspace{-0em}
+		\begin{center}
+   		\includegraphics[width=\textwidth]{images/crisp.png}
+    \end{center}
+    \end{column}
+  \end{columns}
 
 \end{frame}
 
