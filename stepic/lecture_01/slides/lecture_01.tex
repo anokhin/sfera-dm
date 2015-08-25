@@ -11,6 +11,7 @@
 \usepackage{xcolor}
 \usepackage{empheq}
 \usepackage[many]{tcolorbox}
+\usepackage{multirow}
 
 \author{Николай Анохин}
 
@@ -35,7 +36,7 @@
 \begin{frame}{Data Mining как KDD}
 
 \begin{quote}{Knowledge Discovery in Databases (KDD)}
--- это процесс получения точных, неизвестных, потенциально полезных и интерпретируемых закономерностей из данных.\footnote{U. Fayyad, G. Piatetsky-Shapiro, P. Smyth. From data mining to knowledge discovery: an overview. 1996\vspace{1.5em}}
+-- это процесс получения точных, неизвестных, потенциально полезных и интерпретируемых закономерностей из данных.\footnote{U. Fayyad, G. Piatetsky-Shapiro, P. Smyth. From data mining to knowledge discovery: an overview. 1996}
 \end{quote}
 
 \end{frame}
@@ -55,42 +56,70 @@
 
 \end{frame}
 
-\begin{frame}{Пример 1. Красная икра на новогодний стол}
+\begin{frame}
+\frametitle<1>{Качество вина\footnote{\href{https://archive.ics.uci.edu/ml/datasets/Wine+Quality}{Wine Quality Data Set. UCI Machine Learning Repository}}}
+\frametitle<2>{Качество вина: статистический подход}
+\frametitle<3>{Качество вина: машинное обучение}
+\frametitle<4>{Качество вина: вычислительный подход}
 
-\begin{center}
-\begin{small}
-\begin{tabular}{l | c | c | c | c | c | c | c | c | c | c |}
-настоящая & 446 & 521 & 550 & 315 & 613 & 292 & 469 & 658 & 255 & 310 \\
-искусственная &372 & 351 & 361 & 398 & 348 & 457 & 370 & 473 & 475 & 435
-\end{tabular}
-\end{small}
-\end{center}
-
-{\bf Статистический подход}
-\[
-\begin{cases}
-p( \text{цена} | \text{настоящая}) \sim \mathcal{N}(\text{цена} | \mu_r, \sigma_r) \\
-p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{цена} | \mu_a, \sigma_a)
-\end{cases} 
-\xRightarrow{MLE} \;\;\;
-\begin{cases} 
-\mu_r=443, \sigma_r=136 \\ 
-\mu_a=404, \sigma_a=49 
-\end{cases}
-\]
-
-{\bf Машинное обучение}
-
-\hspace{1em}Обучаем линейный SVM: $\text{цена} > 482 \Rightarrow \text{настоящая}$
-
-\vspace{1em}
-{\bf Вычислительный подход}
-
-\hspace{1em}Подсчитываем параметры данных: $ \langle \text{цена}_r \rangle = 443, \langle \text{цена}_a \rangle = 404$
+\begin{columns}[c]
+    \begin{column}{.49\linewidth}
+    \begin{footnotesize}
+    \begin{overprint}
+				\onslide<1>
+				\begin{center}			
+			\begin{tabular}{r  c  c}
+			& ABV, \% & Quality \\
+			\hline
+			1 & 12.8 & good \\
+			2 & 12.8 & good \\
+			3 & 10.5 & good \\
+			4 & 10.7 & good \\
+			5 & 10.7 & good \\
+			$\ldots$ & $\ldots$ & $\ldots$ \\
+			198 & 11.4 & good \\
+			199 & 10.10 & bad \\
+			200 & 10.30 & bad \\
+			201 & 10.90 & bad \\
+			202 & 9.95 & bad \\
+			$\ldots$ & $\ldots$ & $\ldots$ \\
+			444 & 9.05 & bad \\
+			\end{tabular}
+			\end{center}
+			  \onslide<2>
+			  \[
+			\begin{cases}
+			p( \text{alcohol} \mid \text{good} ) \sim \mathcal{N}(\text{alcohol} \mid \mu_g, \sigma_g) \\
+			p( \text{alcohol} \mid \text{bad} ) \sim \mathcal{N}(\text{alcohol} \mid \mu_b, \sigma_b) \\
+			\end{cases}
+			\]
+			\[
+			\qquad\qquad\Downarrow (\text{ML-принцип})
+			\]
+			\[
+			\begin{cases} 
+			\mu_g=11.4, \sigma_g=1.3 \\ 
+			\mu_b=10.2, \sigma_b=1.0
+			\end{cases}
+			\]
+			  \onslide<3> 
+			  Обучаем линейный SVM: 
+			  \[\text{alcohol} > 11.2 \Rightarrow \text{good}\]
+			  \onslide<4>
+			  Подсчитываем параметры данных: \[\langle \text{alcohol} \rangle_g = 11.4,\; \langle \text{alcohol} \rangle_b = 10.2\]		
+		\end{overprint}
+		\end{footnotesize}
+    \end{column}    
+    \begin{column}{.49\linewidth}
+    \begin{center}
+\includegraphics[width=0.95\textwidth]{images/wine.png}
+\end{center}   
+    \end{column}
+\end{columns}
 
 \end{frame}
 
-\begin{frame}{Data Mining -- область на пересечении дисциплин\footnote{\href{http://blogs.sas.com/content/subconsciousmusings/2014/08/22/looking-backwards-looking-forwards-sas-data-mining-and-machine-learning/}{Looking backwards, looking forwards: SAS, data mining, and machine learning}\vspace{1.5em}}}
+\begin{frame}{Data Mining -- область на пересечении дисциплин\footnote{\href{http://blogs.sas.com/content/subconsciousmusings/2014/08/22/looking-backwards-looking-forwards-sas-data-mining-and-machine-learning/}{Looking backwards, looking forwards: SAS, data mining, and machine learning}}}
 
 \begin{center}
 \includegraphics[width=0.75\textwidth]{images/data-mining-venn.png}
@@ -104,7 +133,7 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 \item[1960-е] Data Fishing, Data Dredging
 \item[1980-е] Knowledge Discovery in Databases
 \item[1990-е] Data Mining, Database mining\textsuperscript{TM}
-\item[2000-е] Data Analytics, Data Science\footnote{\href{https://twitter.com/nivertech/status/180109930139893761}{Data Scientist is a Data Analyst who lives in California}}\footnote{\href{https://twitter.com/josh_wills/status/198093512149958656}{A data scientist is someone who is better at statistics than any software engineer and better at software engineering than any statistician.}\vspace{1.5em}}
+\item[2000-е] Data Analytics, Data Science\footnote{\href{https://twitter.com/nivertech/status/180109930139893761}{Data Scientist is a Data Analyst who lives in California}}\footnote{\href{https://twitter.com/josh_wills/status/198093512149958656}{A data scientist is someone who is better at statistics than any software engineer and better at software engineering than any statistician.}}
 \end{enumerate}
 
 \end{frame}
@@ -120,7 +149,7 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 \item[2007] Первый релиз библиотки scikit-learn
 \item[2010] Заработал сайт Kaggle -- платформа для проведения соревнований по Data Science
 \item[2012] Harvard Business Review публикует статью Data Scientist: The Sexiest Job of the 21st Century
-\item[2013] Первая встреча сообщества Moscow Data Science\footnote{\url{http://www.meetup.com/Moscow-Data-Science/}\vspace{1.5em}} в московском офисе Mail.Ru Group
+\item[2013] Первая встреча сообщества Moscow Data Science\footnote{\url{http://www.meetup.com/Moscow-Data-Science/}} в московском офисе Mail.Ru Group
 \end{enumerate}
 
 \end{frame}
@@ -135,10 +164,10 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 
 \end{frame}
 
-\begin{frame}{Пример 2. Игра в гольф\footnote{Induction of Decision Trees / R. Quinlan\vspace{1.5em}}}
+\begin{frame}{Игра в гольф\footnote{Induction of Decision Trees / R. Quinlan}}
 
 \begin{columns}
-    \begin{column}{.7\textwidth}
+    \begin{column}{.7\linewidth}
     \begin{small}
     	{\bf Business understanding}
 		\begin{itemize}
@@ -158,7 +187,7 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 		
     \end{column}
     %   
-    \begin{column}{.3\textwidth}
+    \begin{column}{.3\linewidth}
     \vspace{-0em}
 		\begin{center}
    		\includegraphics[width=\textwidth]{images/crisp.png}
@@ -168,7 +197,7 @@ p( \text{цена} | \text{искусственная}) \sim \mathcal{N}(\text{�
 
 \end{frame}
 
-\begin{frame}{Пример 2. Игра в гольф}
+\begin{frame}{Игра в гольф}
 
 \begin{columns}
     \begin{column}{.7\textwidth}
@@ -279,7 +308,7 @@ H = \{h(\mathbf{x}, \theta) \,:\, \mathcal{X} \times \Theta \rightarrow \mathcal
     
 \end{frame}
 
-\begin{frame}{Пример 1. Снова банки с икрой}
+\begin{frame}{Качество вина}
     
 {\bf признаковое описание}: $\mathbf{x} \in \mathbb{R}^1$ \\
 \vspace{1em}
@@ -288,16 +317,16 @@ H = \{h(\mathbf{x}, \theta) \,:\, \mathcal{X} \times \Theta \rightarrow \mathcal
 {\bf модель}:
 \[
 \begin{cases}
-p(\mathbf{x} | C_0) \sim \mathcal{N}(\mathbf{x} | \mu_0, \sigma_0), \;\; p(C_0) = \frac 1 2 \\
-p(\mathbf{x} | C_1) \sim \mathcal{N}(\mathbf{x} | \mu_1, \sigma_1), \;\; p(C_1) = \frac 1 2
-\end{cases} \;\; + \quad y = \mathcal{I}(p(C_1 | \mathbf{x}) > p(C_1 | \mathbf{x}))
+p(\mathbf{x} | \text{good}) \sim \mathcal{N}(\mathbf{x} | \mu_g, \sigma_g), \;\; p(\text{good}) = \frac 1 2 \\
+p(\mathbf{x} |  \text{bad}) \sim \mathcal{N}(\mathbf{x} | \mu_b, \sigma_b), \;\; p( \text{bad}) = \frac 1 2
+\end{cases} \;\; + \quad y = \mathcal{I}(p(\text{good} | \mathbf{x}) > p(\text{bad} | \mathbf{x}))
 \]
 \vspace{1em}
-{\bf параметры}: $\theta = (\mu_1, \sigma_1, \mu_0, \sigma_0)$
+{\bf параметры}: $\theta = (\mu_g, \sigma_g, \mu_b, \sigma_b)$
 
 \end{frame}
 
-\begin{frame}{Пример 2. Дерево решений}
+\begin{frame}{Дерево решений}
     
 \begin{columns}
 \begin{column}{.5\textwidth}
