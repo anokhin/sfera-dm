@@ -1,0 +1,55 @@
+\documentclass[aspectratio=169]{beamer}
+%\usetheme{Marburg}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{empheq}
+\usepackage[many]{tcolorbox}
+\usepackage{multirow}
+
+\author{Николай Анохин}
+
+\title{Задача и алгоритмы кластеризации}
+%\setbeamercovered{transparent} 
+\setbeamertemplate{navigation symbols}{} 
+%\logo{} 
+%\institute{} 
+\date{} 
+%\subject{}
+
+\tcbset{highlight math style={enhanced,colframe=red,colback=white,arc=4pt,boxrule=1pt}}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Задача кластеризации}
+
+В задачах кластеризации значение целевой функции для объектов из обучающей выборки неизвестно. Цель кластеризации -- исследовать ``скрытую структуру'' данных.
+
+\end{frame}
+
+\begin{frame}{Постановка задачи}
+
+\vspace{1em}
+{\bf Дано.} Признаковые описания $N$ объектов $\mathbf{x} \in \mathcal{X}$, образующие тренировочный набор данных $X$
+
+\vspace{1em}
+{\bf Найти.} Модель из семейства параметрических функций 
+\[
+H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \mid \mathcal{Y} = \{1, \ldots, K\}\},
+\]
+ставящую в соответствие произвольному $\mathbf{x} \in \mathcal{X}$ один из $K$ кластеров так, чтобы объекты внутри одного кластера были похожи, а объекты из разных кластеров различались
+
+\end{frame}
+
+
+\end{document}
