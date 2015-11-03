@@ -500,7 +500,7 @@ TF\!\!-\!\!IDF_{t,d} = TF_{t,d} \times IDF_t
 
 Дано
 
-$\mathbf{x} \in \mathbf{X}$ -- описание документа $d$ из коллекции $D$ \\
+$\mathbf{x} \in X$ -- описание документа $d$ из коллекции $D$ \\
 $C_k \in C, \; k = 1,\ldots,K$ -- целевая переменная
 
 \vspace{1em}
@@ -537,7 +537,7 @@ P(x_i=w^s | C_k) = P(x_j=w^s | C_k) = P(x = w^s | C_k)
 
 Получаем
 \[
-p(\mathbf{x} | C_k) = p(x_1=w^{s_1}, \ldots, x_{|\mathbf{x}|}=w^{s_{|\mathbf{x}|}} | C_k) = \prod_{i=1}^{|\mathbf{x}|} p(x_i = w^{s_i} | C_k)
+p(\mathbf{x} | C_k) = p(x_1=w^{s_1}, \ldots, x_{|\mathbf{x}|}=w^{s_{|\mathbf{x}|}} | C_k) = \prod_{i=1}^{|\mathbf{x}|} p(x = w^{s_i} | C_k)
 \]
 
 \begin{block}{Почему NB хорошо работает?}
@@ -645,7 +645,7 @@ d & Текст & Класс \\
 
 \begin{frame}{Сглаживание}
 
-{\bf Проблема:} $p(\text{пушистые свинки}|\text{не мимими}) = 0$
+{\bf Проблема:} $p(\text{свинки}|\text{мимими}) = 0$
 
 \vspace{1em}
 {\bf Решение:}
