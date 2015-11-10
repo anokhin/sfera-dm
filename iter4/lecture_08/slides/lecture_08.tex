@@ -379,7 +379,7 @@ T_0 \succ T_1 \succ \ldots \succ T_r
 \hspace{1em}Итог: $O(mn) + 2 O(m \frac{n}{2}) + 4 O(m \frac{n}{4}) + \ldots = O(m n \log n)$
 
 \vspace{1em}
-{\bf Применение. } $O(\log n)$
+{\bf Применение. } $O(\log m)$
 
 \end{frame}
 
@@ -476,13 +476,16 @@ i(N) = \sum_{y \in N} (y - \overline{y})^2
 
 \end{frame}
 
+\begin{frame}{\href{http://www.r2d3.us/visual-intro-to-machine-learning-part-1/}{Demo}}
+\end{frame}
+
 \begin{frame}{Решающие деревья. Итог}
 
 \begin{itemize}
 \item[+] Легко интерпретируемы. Визуализация (ня!)
 \item[+] Любые входные данные
 \item[+] Мультикласс из коробки
-\item[+] Предсказание за $O(\log n)$
+\item[+] Предсказание за $O(\log m)$
 \item[+] Поддаются статистическому анализу
 \end{itemize}
 
