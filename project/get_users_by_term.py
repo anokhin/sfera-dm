@@ -4,6 +4,7 @@ import thread
 import time
 import twitter
 import json
+import traceback
 
 MIN_STATUSES = 10
 
@@ -14,36 +15,42 @@ ACCESS_TOKEN_KEY = "105892440-hiutXI6zWd1XjrQJaotg7GbW6Mt1gihXCnE4njZH"
 ACCESS_TOKEN_SECRET = "RxIHlIylRycp8dPZfV8fXSM2WtMP74lteIp5P6jxwh4XW"
 
 
+users = 'politics_users'
+users_list = 'politics_users_list'
+
+
 class UsersWriter:
     def __init__(self):
 
-        self.users_file = open('home_users.json_lines', 'a')
+        self.users = set()
+        if os.path.exists(users_list):
+            with open(users_list) as f:
+                for line in f:
+                    self.users.add(line.strip())
 
-        try:
-            self.users_list_file = open('home_users_list.json')
-            self.users = set(json.loads(self.users_list_file.read()))
-            self.users_list_file = open('home_users_list.json', 'w')
-        except:
-            self.users_list_file = open('home_users_list.json', 'w')
-            self.users = set()
+    def open(self):
+        self.users_file = open(users, 'a')
+        self.users_list_file = open(users_list, 'a')
+
+    def close(self):
+        self.users_file.close()
+        self.users_list_file.close()
 
     def write_user(self, user):
-        if 'status' in user:
-            del user['status']
         self.users_file.write('\n')
         self.users_file.write(json.dumps(user))
+        self.users_list_file.write('\n')
+        self.users_list_file.write(str(user['id']))
 
     def append_user(self, user):
         if user.id in self.users:
             return
 
+        self.open()
         self.users.add(user.id)
         self.write_user(user.AsDict())
+        self.close()
 
-    def close(self):
-        self.users_file.close()
-        self.users_list_file.write(json.dumps([u for u in self.users]))
-        self.users_list_file.close()
 
 
 def main():
@@ -55,29 +62,36 @@ def main():
                       access_token_secret=ACCESS_TOKEN_SECRET)
 
     tweet_writer = UsersWriter()
-    # ['Game of Thrones', 'GameofThrones', 'GoT', 'Greyjoy', 'GoTSeason5', 'GoTSeason4', 'GoTSeason3', 'GoTSeason2', 'GoTSeason1', 'Meryn Trant', 'Mother of dragons']
-    # l = ['sansa Stark', 'ned stark', 'arya stark', 'lannister']
-    #l = ['tirion lannister', 'Baratheon', 'Martell', 'A Song of Ice and Fire', 'House Tyrell', 'Maester Luwin', 'Targaryen', 'Bolton', 'Lord Snow']
-    #l = ['Dothraki', 'Westeros', 'Ygritte', 'Valar Dohaeris', 'Khaleesi', 'khalasar', 'A Storm of Swords', 'Kissed By Fire', 'Bran Stark', 'Jorah Mormont', 'Braavosi', 'Valyrian']
-    # l = ['Talisa Maegyr', 'Brienne of Tarth', 'Robert Baratheon', 'Cersei Lannister', "Petyr Baelish", "Lord Varys", "Ellaria Sand", "Margaery Tyrell", "Viserys", "Daenerys Targaryen", "Missandei", "Daario Naharis" ]
-    # l = ['The Big Bang Theory', 'Sheldon Cooper', 'Leonard Hofstadter', 'Howard Wolowitz', 'Raj Koothrappali', 'Bernadette Rostenkowski', 'Amy Farrah Fowler', 'Stuart Bloom', 'bigbangtheory', 'tbbt', 'bbt', 'sheldon', 'bazinga', 'thebigbangtheory']
-    # l = ['House of Cards', 'Rachel Posner', 'Frank Underwood', 'Zoe Barnes', 'Peter Russo', 'Claire Underwood', 'Remy Danton', 'Jacqueline Sharp', 'Edward Meechum', 'Doug Stamper', 'Linda Vasquez', 'Janine Skorsky', 'Lucas Goodwin', 'Tom Hammerschmidt', 'Christina Gallagher', 'Garrett Walker', 'Gillian Cole', 'Adam Galloway', 'Jim Matthews']
-    l = ['houseofcards']
+    kws = 'election2016 #hillaryclinton #hillary2016 #muslimsforbernie #democrats #berniewillwin #politics ' \
+    '#berniesandersforpresident #demtownhall #bernie4president #feelthebern #presidentbernie #notmeus ' \
+    '#berniesanders2016 #voteforbernie #bernieisbae #election #berniesanders #bernie2016 #jewsforbernie ' \
+    '#bernie #latinosforbernie #orlandoforbernie #iowaforbernie #uniteblue #liberal #congress #lgbtq ' \
+    '#unicornsforbernie #youngdemocrats #vote2016 #2016election #millennialsforbernie #womenforbernie ' \
+    '#tedcruz #cruz2016 #choosecruz #presidentialelection #babesforbernie #campaigntrail2016 #caucas2016 ' \
+    '#2016campaign #hillary #democraticparty #democrat #campaign2016 #housedemocrats #2016caucas ' \
+    '#nhpolitics #vote #chasetherace2016 #swedesforbernie2016 #clinton #liberalsarestupid #nohillary #nobernie ' \
+    '#nobama #republican #marcorubio #liberals #conservative #thetruth #nohillary2016 #sanders #trump ' \
+    '#donaldtrump #jackrussell #jackrussellsofig'
+
+    l = kws.split(' #')
+
     for kw in l:
         print kw
         try:
         # if True:
             page = 1
 
-            while len(tweet_writer.users) < 100000:
-                print "page:", page,
+            while True:
+                print "page: ", page
+                # if True:
                 try:
                     result = api.GetUsersSearch(kw, page=page)
                 except twitter.TwitterError as ex:
                     print ex.message[0]['message']
+                    traceback.format_exc()
                     if ex.message[0]['code'] == 44:
                         break
-                    if ex.message[0]['code'] == 88:                        
+                    if ex.message[0]['code'] == 88:
                         print "sleep for ", sleep_time
                         time.sleep(sleep_time)
                         continue
@@ -86,6 +100,7 @@ def main():
                     break
                 except Exception as ex:
                     print ex
+                    traceback.format_exc()
                     break
 
                 for user in result:
@@ -107,6 +122,7 @@ def main():
                     time.sleep(sleep_time)
 
         except Exception as ex:
+            traceback.format_exc()
             print ex
 
     tweet_writer.close()

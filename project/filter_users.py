@@ -18,11 +18,21 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
                   access_token_secret=ACCESS_TOKEN_SECRET)
 
 
-found_followers = set()
+users = 'politics_users'
+
+users_filtered = 'politics_users_filtered'
+users_seen = 'politics_users_seen'
+
+users_found = set()
 
 
-if os.path.exists("filtered_home.json_lines"):
-    for line in open("filtered_home.json_lines"):
+def write(f_name, data):
+    with open(f_name, 'a') as f:
+        f.write(data)
+
+
+if os.path.exists(users_filtered):
+    for line in open(users_filtered):
         if not line.strip():
             continue
 
@@ -31,43 +41,36 @@ if os.path.exists("filtered_home.json_lines"):
         except:
             print line
             raise
-        found_followers.add(user)
+        users_found.add(user)
 
-    followers_file = open("filtered_home.json_lines", 'a')
-else:
-    followers_file = open("filtered_home.json_lines", 'w')
 
-if os.path.exists("seen_home.list"):
-    for line in open("seen_home.list"):
+if os.path.exists(users_seen):
+    for line in open(users_seen):
         l = line.strip()
         if not l:
             continue
         user = int(l)
-        found_followers.add(user)
-    seen_followers_file = open("seen_home.list", 'a')
-else:
-    seen_followers_file = open("seen_home.list", 'w')
+        users_found.add(user)
 
 
 str_idx = 0
 count = 0
-for line in open("home_users.json_lines"):
-    print len(found_followers)
+for line in open(users):
+    print len(users_found)
 
     if not line.strip():
         continue
+
     str_idx += 1
-    if str_idx < 8000:
-        continue
 
     user = json.loads(line)
     user_id = user['id']
-    if user_id in found_followers:
+    if user_id in users_found:
         continue
 
     print user_id
 
-    print "found:", str(len(found_followers))
+    print "found:", str(len(users_found))
     print "filtered:", str(str_idx)
     print ""
 
@@ -79,7 +82,7 @@ for line in open("home_users.json_lines"):
             retry = False
         except twitter.TwitterError as ex:
             if ex.message == u"Not authorized.":
-                seen_followers_file.write(str(user_id))
+                write(users_seen, str(user_id) + '\n')
                 print user_id
                 print "Not auth"
                 br = True
@@ -89,10 +92,8 @@ for line in open("home_users.json_lines"):
                 br = True
                 break
 
-            print ex.args
-            print ex.message
-
-            if ex.message[0]['code'] == 88:
+            msg = ex.message[0]
+            if type(msg) == dict and 'code' in msg and msg['code'] == 88:
                 sleep_time = api.GetSleepTime("statuses/user_timeline")
                 print "sleep for ", sleep_time
                 time.sleep(sleep_time)
@@ -103,10 +104,9 @@ for line in open("home_users.json_lines"):
     if br:
         continue
 
-    seen_followers_file.write(str(user_id))
-    seen_followers_file.write('\n')
+    write(users_seen, str(user_id) + '\n')
 
-    found_followers.add(user_id)
+    users_found.add(user_id)
 
     user_tweets = []
 
@@ -132,8 +132,7 @@ for line in open("home_users.json_lines"):
         user_tweets.append(item.AsDict())
 
     if len(user_tweets) > 10:
-        followers_file.write(json.dumps((user_id, user_tweets)))
-        followers_file.write("\n")
+        write(users_filtered, json.dumps((user_id, user_tweets)) + '\n')
         print "found_user", user_id
 
-    print len(found_followers)
+    print len(users_found)
