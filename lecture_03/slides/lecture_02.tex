@@ -123,76 +123,7 @@ function kmeans(X, K):
 \tableofcontents
 \end{frame}
 
-% =======================
-\section{Задача кластеризации}
-% =======================
-
-\begin{frame}{}
-
-\begin{center}
-{\LARGE Задача кластеризации}
-
-\vspace{2em}
-\includegraphics[scale=0.5]{images/clustering_joke.jpg}
-\end{center}
-
-\end{frame}
-
-\begin{frame}{Обучение без учителя}
-
-В задачах {\bf без учителя} значение целевой функции для объектов из обучающей выборки неизвестно. Решение таких задач подразумевает исследование ``скрытой структуры'' данных.
-
-\vspace{2em}
-Задача {\bf кластеризации} -- задача без учителя, подразумевающая разбиение множества объектов на непересекающиеся подмножества (кластеры).
-
-\end{frame}
-
-\begin{frame}{Мотивация}
-
-\begin{itemize}
-\item
-\only<1>{Кластеризация позволяет больше узнать о данных (knowledge discovery!)}
-\only<2>{Работать с кластерами удобнее, чем c отдельными объектами}
-\only<3>{Кластеризация позволяет конструировать новые признаки}
-\end{itemize}
-
-\only<1>{
-\begin{figure}
-\includegraphics[width=0.8\textwidth]{images/paths.png}
-\caption{Типичные траектории покупателей супермаркета\footnote{\href{https://statistics.wharton.upenn.edu/files/?whdmsaction=public:main.file&fileID=346}{An exploratory look at supermarket shopping paths // J.S. Larson et. al.}}}
-\end{figure}
-}
-\only<2>{
-\begin{figure}
-\includegraphics[height=0.55\textheight]{images/hrdiagram.png}
-\caption{Диаграмма Герцшпрунга — Рассела\footnote{\url{https://lcogt.net/spacebook/h-r-diagram/}}}
-\end{figure}
-}
-\only<3>{
-\begin{quote}
-\texttt{d1: Банк финансирует строительство футбольного стадиона} \\
-\texttt{d2: Автомобили подорожали из-за финансового кризиса } \\
-\end{quote}
-\vspace*{\fill}
-\begin{tabular}{r | c c c c c c c c c}
-& \rot{\it банк} & \rot{\it финансы} & \rot{\it строительство} & \rot{\it футбол} & \rot{\it стадион} & \rot{\it автомобиль} & \rot{\it подорожание} & \rot{\it кризис} & \ldots \\
-\hline
-\texttt{d1} & 1 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & \ldots \\
-\texttt{d2} & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & \ldots \\
-& \multicolumn{9}{c}{\ldots}
-\end{tabular} \quad \tikzarrow{pink}{clustering} \quad
-\begin{tabular}{r | c c c c}
-& \rot{\it экономика} & \rot{\it спорт} & \rot{\it производство} & \ldots \\
-\hline
-\texttt{d1} & 2 & 2 & 1 & \ldots \\
-\texttt{d2} & 3 & 0 & 1 & \ldots \\
- & \multicolumn{4}{c}{\ldots}
-\end{tabular}
-}
-
-\end{frame}
-
-\begin{frame}{Задача кластеризации}
+\begin{frame}{На предыдущей лекции}
 
 \vspace{1em}
 {\bf Дано.} Признаковые описания $N$ объектов $\mathbf{x} = (x_1, \ldots, x_m) \in \mathcal{X}$, образующие тренировочный набор данных $X$
@@ -203,6 +134,9 @@ function kmeans(X, K):
 H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \mid \mathcal{Y} = \{1, \ldots, K\}\},
 \]
 ставящую в соответствие произвольному $\mathbf{x} \in \mathcal{X}$ один из $K$ кластеров так, чтобы объекты внутри одного кластера были похожи, а объекты из разных кластеров различались
+
+\vspace{1em}
+{\bf Алгоритмы.} Hierarchical Clustering, dbscan, OPTICS
 
 \end{frame}
 
@@ -221,19 +155,6 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
 
 \end{frame}
 
-\begin{frame}{Начнем с простого (смоделируем один кластер)}
-
-{\bf Данные} \\ Координаты точек попаданий по мишени из гауссовской пушки 
-
-{\bf Задача} \\ Определить, куда смещен прицел
-
-\begin{figure}
-	\centering
-	 \includegraphics[width=0.5\textwidth]{images/target.jpg}       
-\end{figure}
-
-\end{frame}
-
 \begin{frame}{Гаусс, Карл Фридрих (1777-1855)}
 
 \begin{figure}
@@ -245,6 +166,19 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
 \item Не открыл распределение Гаусса
 \item Открыл все остальное
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Начнем с простого (смоделируем один кластер)}
+
+{\bf Данные} \\ Координаты точек попаданий по мишени из гауссовской пушки 
+
+{\bf Задача} \\ Определить, куда смещен прицел
+
+\begin{figure}
+	\centering
+	 \includegraphics[width=0.5\textwidth]{images/target.jpg}       
+\end{figure}
 
 \end{frame}
 
