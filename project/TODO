@@ -1,2 +1,18 @@
-во второй домашке используется страна.
-во сторой домашке нужно поправить stacked -> гистограмма
+1.  во второй домашке используется страна.
+    во второй домашке нужно поправить stacked -> гистограмма
+2.  дз 1 - убрать positive, negative
+3.  дз 1 - убрать описание, что количество позитивных увеличивается
+4.  дз 3 - добавить описание зачем в кластеризации y
+5.  Во втором задании, как мне кажется, при построении графиков в строках типа: 
+    social_features = [f for f in social_features_new if f in features]
+    слова "social_features_new" и "features" нужно поменять местами, так как иначе графики строятся в одном порядке, а подписываются в другом
+    
+    vadim_navrazhnykh [8:29 PM] 
+    да, там не очень
+    я .index(f) делал
+
+    anton [10:49 PM] 
+    вроде же достаточно social_features_new написать вот так и все встанет на свои места
+    social_features_new = ["followers_count", "friends_count", "statuses_count", "favourites_count", "listed_count", "created_year", "verified"]
+    
+  
