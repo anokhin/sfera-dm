@@ -92,7 +92,7 @@
 \newcommand*\rot{\rotatebox{90}}
 
 \author{Николай Анохин}
-\title{\newline \newline \newline Лекция 3 \\ Алгоритмы кластеризации II}
+\title{\newline \newline \newline Лекция 4 \\ Различные аспекты кластеризации}
 
 \begin{document}
 
@@ -120,14 +120,9 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
     \begin{column}{.4\textwidth}
     	Рассмотрели классические алгоритмы кластеризации
 		\begin{enumerate}
+					\item Hierarchical Clustering
+			\item dbscan, OPTICS
 			\item Смесь гауссовских распределений и k-means++
-			\item Hierarchical Clustering
-			\item DBSCAN
-		\end{enumerate}    	
-		И как их использовать
-		\begin{enumerate}
-			\item Выбор количества кластеров
-			\item Оценка качества
 		\end{enumerate}
 		
     \end{column}
@@ -144,142 +139,311 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
 
 % ============================================== %
 
-\section{Кластеризация больших данных}
+\section{Байесовская кластеризация + EM}
 
 % ============================================== %
 
 \begin{frame}
 
 \begin{center}
-{\Large Кластеризация больших данных\footnote{\href{http://www.researchgate.net/publication/276934256_Big_Data_Clustering_Algorithms_and_Challenges}{Big Data Clustering: Algorithms and Challenges}}}
+{\Large Байесовская кластеризация + EM}
 
-\vspace{2em}
-\includegraphics[height=0.6\textheight]{images/bdc.png}
+\vspace{1em}
+\includegraphics[height=0.5\textheight]{images/em.jpg}
 \end{center}
 
 \end{frame}
 
-\begin{frame}{Balanced Iterative Reducing and Clustering using Hierarchies (BIRCH)\footnote{\href{http://www.cs.sfu.ca/CourseCentral/459/han/papers/zhang96.pdf}{BIRCH: An efficient data clustering method for very large datasets}}}
+\begin{frame}{Expectation Maximization}
 
-{\it Идея метода:} построить иерархию кластеров, которая позволит хранить ограниченное количество данных в виде агрегатов.
+{\bf Дано.} \\ Известно распределение $P(\mathbf{X}, \mathbf{Z} | \theta)$, где $\mathbf{x}$ -- наблюдаемые переменные, а $\mathbf{z}$ -- скрытые. 
+
+{\bf Найти.} \\ $\theta$,  максимизирующее $P(\mathbf{X} | \theta)$.
 
 \vspace{1em}
 \begin{itemize}
-\item {\it локальность:} каждая точка ``кластеризуется'' без сканирования всех других точек или имеющихся кластеров
-\item {\it выбросы:} точки в ``густонаселенных'' регионах принадлежат кластерам, а в ``малонаселенных'' --  к выбросам 
-\item {\it экономность:} используется вся доступная память, при этом минимизируется I/O
-\item {\it масштабируемость:} при определенных условиях обучается ``онлайн'' и требует единственного прохода по данным
+\item[E] вычислить $P(\mathbf{Z} | \mathbf{X}, \theta^{old})$ при фиксированном $\theta^{old}$
+\item[M] вычислить $\theta^{new} = \arg \max_{\theta} \mathcal{Q} (\theta, \theta^{old})$, где
+\[
+\mathcal{Q} (\theta, \theta^{old}) = E_\mathbf{Z}[\ln p(\mathbf{X}, \mathbf{Z} | \theta)] = \sum_{\mathbf{Z}} p(\mathbf{Z} | \mathbf{X}, \theta^{old}) \ln p(\mathbf{X}, \mathbf{Z} | \theta))
+\]
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Меры компактности кластера}
+\begin{frame}{Кластеризация пользователей стримингового сервиса}
 
-Центроид
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+    \begin{center}
+   		\includegraphics[scale=0.5]{images/movies_data.png}
+    \end{center}   
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+	Для каждого пользователя известно, есть ли у него/нее интерес к романтике, экшену и средняя цена купленных фильмов
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{center}
+\includegraphics[height=0.8\textheight]{images/movies.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Предположения модели}
+
+Априорное распределение
 \[
-\mathbf{x}_0 = \frac{1}{N} \sum_{i=1}^N \mathbf{x}_i
+p(C_k) = \pi_k
 \]
-Радиус
+Распределение интересов
 \[
-R = \frac{1}{N} \sum_{i=1}^N d(\mathbf{x}_i, \mathbf{x}_0)
+p(I_i | C_k) \sim Ber(P_{ki})
 \]
-Диаметр
-\[ 
-\quad D = \frac{1}{N(N-1)} \sum_{i=1}^N \sum_{j=1}^N d(\mathbf{x}_i, \mathbf{x}_j)
+Распределение средней цены фильма
+\[
+p(x | C_k) \sim \mathcal{N}(x | \mu_k, \sigma_k)
 \]
 
 \end{frame}
 
-\begin{frame}{Clustering Feature}
+\begin{frame}{Итерации EM}
 
-Clustering feature -- это объект, содержащий сжатую информацию о кластере.
+\begin{itemize}
+\item[E]
+\[
+\gamma_{nk} = p(z_n = k | u_n, \pi, P, \mu, \sigma) = \frac{\pi_k \mathcal{N}(x_n | \mu_k, \sigma_k) \prod_{i=1}^2 P_{ki}^{I_{ni}}(1 - P_{ki})^{1 - I_{ni}}}{\sum_j \pi_j \mathcal{N}(x_n | \mu_j, \sigma_j) \prod_{i=1}^2 P_{ji}^{I_{ni}}(1 - P_{ji})^{1 - I_{ni}}}
+\]
+\item[M]
+\[
+N_k = \sum_{n=1}^N \gamma_{nk}, \qquad \pi_k = \frac{N_k}{N} 
+\]
+\[
+P_{ki} = \frac{1}{N_k} \sum_{n=1}^N \gamma_{nk} I_{ni}, \quad \mu_{k} = \frac{1}{N_k} \sum_{n=1}^N \gamma_{nk} x_n, \quad \sigma_k = \frac 1 {N_k} \sum_{n=1}^N \gamma_{nk} ({x}_n - \mu_k)^2
+\]
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{center}
+\includegraphics[height=0.8\textheight]{images/movies_res.png}
+\end{center}
+
+\end{frame}
+
+% ============================================== %
+
+\section{Функции расстояния}
+
+% ============================================== %
+
+\begin{frame}
+
+\begin{center}
+{\Large Функции расстояния}
 
 \vspace{1em}
-\begin{block}{Определение 1}
-Пусть кластер $C$ содержит $N$ $d$-мерных объектов $\mathbf{x}_i$. Clustering feature (CF) для $C$ определяется как тройка $CF = (N, LS, SS)$, где 
-\[
-LS = \sum_{i=1}^N \mathbf{x}_i, \quad SS = \sum_{i=1}^N \mathbf{x}^2_i
-\]
-\end{block}
-\begin{block}{Утверждение 1}
-Пусть $CF_1 = (N_1, LS_1, SS_1)$ и $CF_2 = (N_2, LS_2, SS_2)$ -- CF для кластеров $C_1$ и $C_2$. Тогда CF для кластера, полученного слиянием $C_1$ и $C_2$, определяется как
-\[
-CF = (N_1 + N_2, LS_1 + LS_2, SS_1 + SS_2)
-\]
-
-\end{block}
+\includegraphics[height=0.8\textheight]{images/celsius.jpg}
+\end{center}
 
 \end{frame}
 
-\begin{frame}{CF Tree}
+\begin{frame}{Модификации алгоритма}
 
-B --  максимальное количество детей у внутреннего узла \\
-L -- максимальное количество детей у листа \\
-T -- Максимальная компактность ($R$ или $D$) ребенка листа
+Взять уже известную нам функцию потерь (инерцию) и ``поиграть'' с функцией расстояния. 
+\[
+\tilde J(\mu) = \sum_{n=1}^N \sum_{k=1}^K r_{nk} d(\mathbf{x}_n, \mu_k), \quad r_{nk} = \begin{cases}
+1, \; \text{для } k = \arg \min_j d(\mathbf{x}_n, \mu_j) \\
+0, \; \text{иначе}
+\end{cases}
+\]
+\end{frame}
+
+\begin{frame}{Расстояния 1}
+
+\begin{columns}[T]
+    \begin{column}{.5\textwidth}
+    \begin{itemize}
+		\item Минковского
+		\[
+		d_r(\mathbf{x}, \mathbf{y}) = \left[ \sum_{j=1}^N |x_j - y_j|^r \right]^{\frac{1}{r}}
+		\]
+		\item Евклидово $r = 2$
+		\[
+		d_E(\mathbf{x}, \mathbf{y}) = d_2(\mathbf{x}, \mathbf{y})
+		\]
+		\item Манхэттэн $r = 1$
+		\[
+		d_M(\mathbf{x}, \mathbf{y}) = d_1(\mathbf{x}, \mathbf{y})
+		\]
+		\item $r=\infty$
+		\[
+		d_\infty(\mathbf{x}, \mathbf{y}) = \max_j |x_j - y_j|
+		\]
+	\end{itemize}
+    \end{column}
+       
+    \begin{column}{.5\textwidth}
+    \vspace{2em}
+	\begin{center}
+   		\includegraphics[scale=0.25]{images/manhattan.png}
+    \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{enumerate}
+\item Функции расстояния чувствительны к ``масштабу'' данных
+\begin{itemize}
+\item Преобразовать обучающую выборку так, чтобы  признаки имели нулевое среднее и единичную дисперсию (standartization)
+\item Преобразовать обучающую выборку так, чтобы значения признаков лежали на отрезке $[0, 1]$ (normalization)
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.2]{images/orig.png}
+\includegraphics[scale=0.2]{images/std.png}
+\includegraphics[scale=0.2]{images/norm.png}
+\end{center}
+\item Есть шанс улучшить качество, применив монотонное преобразование ($\log$, $\sqrt{\;}$)
+\begin{center}
+$  $\includegraphics[scale=0.2]{images/orig.png}
+\includegraphics[scale=0.2]{images/log.png}
+\includegraphics[scale=0.2]{images/sqrt.png}
+\end{center}
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Расстояния 2}
+
+\begin{columns}[T]
+
+    \begin{column}{.4\textwidth}
+    \vspace{5em}
+	\begin{center}
+   		\includegraphics[scale=0.5]{images/edit.png}
+    \end{center}
+    \end{column}
+       
+    \begin{column}{.6\textwidth}
+    \begin{itemize}
+		\item Жаккар
+		\[
+		d_J(\mathbf{x}, \mathbf{y}) = 1 - \frac{|\mathbf{x} \cap \mathbf{y}|}{|\mathbf{x} \cup \mathbf{y}|}
+		\]
+		\item Косинус
+		\[
+		d_c(\mathbf{x}, \mathbf{y}) = \arccos \frac{\mathbf{x} \mathbf{y}}{\|\mathbf{x}\| \|\mathbf{y}\|}
+		\]
+		\item Правки \\
+		{\it $d_e$ -- наименьшее количество удалений и вставок, приводящее $\mathbf{x}$ к $\mathbf{y}$.}
+		\item Хэмминг \\
+		{\it $d_H$ -- количество различных компонент в $\mathbf{x}$ и $\mathbf{y}$.}
+	\end{itemize}
+    
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ============================================== %
+
+\section{Выбор количества кластеров}
+
+% ============================================== %
+
+\begin{frame}
+
+\begin{center}
+{\Large Выбор количества кластеров}
+
+\vspace{2em}
+\includegraphics[width=0.7\textwidth]{images/random_number.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Выбор наилучшего $K$}
+
+{\it Идея.} Выбрать критерий качества кластеризации и построить его значение для $K = 1, 2, \ldots$
 
 \begin{columns}[]
-  \begin{column}{.6\textwidth}
-  \begin{center}
-   		\includegraphics[height=0.7\textheight]{images/cftree.png}
-    \end{center}
-		
-  \end{column}       
-  \begin{column}{.4\textwidth}
-  При разделении узла выбираем две наиболее удаленные CF и	лепим к ним ближайшие
-  \end{column}
+    \begin{column}{.5\textwidth} 
+    \begin{itemize}
+	\item средняя сумма квадратов расстояния до центроида
+	\item средний диаметр кластера
+	\end{itemize} 		    
+    \end{column}
+    \begin{column}{.5\textwidth}
+    \vspace{1em}
+    \includegraphics[scale=0.3]{images/elbow.png}    
+    \end{column}
 \end{columns}
 
 \end{frame}
 
-\begin{frame}{BIRCH}
+\begin{frame}{Критерий Silhouette}
 
-\begin{center}
-\includegraphics[height=0.9\textheight]{images/birch.png}
-\end{center}
+Пусть дана кластеризация в $K$ кластеров, и объект $i$ попал в $C_k$
 
-\end{frame}
-
-\begin{frame}{Пример}
-
-\begin{center}
-\includegraphics[height=0.9\textheight]{images/toy.png}
-\end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]{Сравнение скорости}
-
-\begin{center}
-\includegraphics[width=0.9\textwidth]{images/compare.png}
-\end{center}
-
-\begin{verbatim}
-Birch without global clustering as the final step took 4.19 seconds
-n_clusters : 158
-Birch with global clustering as the final step took 4.61 seconds
-n_clusters : 100
-Time taken to run MiniBatchKMeans 5.61 seconds
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}{Итоги}
-
+\vspace{1em}
 \begin{itemize}
-\item[+] Алгоритм работает за $O(N)$
-\item[+] Можно контролировать количество используемой памяти
-\item[+] В некоторых случаях поддерживается онлайн кластеризация
-\item[--] Тяжелый подбор параметров
-\item[--] Только эллиптические кластеры
+\item $a(i)$ -- среднее расстояние от $i$ объекта до объектов из $C_k$
+\item $b(i) = min_{j \neq k} b_j(i)$,  где $b_j(i)$ -- среднее расстояние от $i$ объекта до объектов из $C_j$
 \end{itemize}
+\[
+silhouette(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}
+\]
+Средний silhouette для всех точек из $\mathbf{X}$ является критерием качества кластеризации.
 
 \end{frame}
 
-\begin{frame}{Другие алгоритмы\footnote{\href{http://bib.dbvis.de/uploadedFiles/176.pdf}{DENCLUE}}\footnote{\href{http://fusion.cs.uni-magdeburg.de/pubs/optigrid.pdf}{OptiGrid}}\footnote{\href{https://www.wikiwand.com/en/Fuzzy_clustering}{Fuzzy c-means}}}
+% ============================================== %
+
+\section{Качество кластеризации}
+
+% ============================================== %
+
+\begin{frame}
 
 \begin{center}
-\includegraphics[width=0.9\textwidth]{images/summary.png}
+{\Large Качество кластеризации}
+
+\includegraphics[scale=0.3]{images/quality.jpg}
 \end{center}
+
+\end{frame}
+
+\begin{frame}{Качество кластеризации\footnote{\href{http://scikit-learn.org/stable/modules/clustering.html\#clustering-evaluation}{scikit-learn docs}}}
+
+Пусть дана обучающая выборка, для которой правильная кластеризация $C$ известна. С помощью выбранного алгоритма получена кластеризация $K$. Проверить, насколько $K$ совпадает с $C$.
+
+\vspace{1em}
+\begin{itemize}
+\item Adjusted Rand Index \\
+{\it \small
+$a$ -- кол-во пар объектов, попавших в один кластер и в $C$, и в $K$ \\
+$b$ -- кол-во пар объектов, попавших в разные кластеры и в $C$, и в $K$
+\[
+RI = \frac{a+b}{C^N_2}, \quad ARI = \frac{RI - E_{rdm}[RI]}{\max(RI) - E_{rdm}[RI]}
+\]
+}
+\item Mutual Information \\
+{\it \small
+\[
+MI = \sum_{c \in C} \sum_{k \in K} p(c, k) \log \frac{p(c, k)}{p(k)p(c)}
+\]
+}
+\end{itemize}
 
 \end{frame}
 
@@ -337,7 +501,7 @@ J_{t-SNE} = KL(P \| Q) = \sum_i \sum_j p(i, j) \log \frac{p(i, j)}{q(i, j)} \rig
 
 \end{frame}
 
-\begin{frame}{Дивергенция Кульбака-Лейблера}
+\begin{frame}{Дивергенция Кульбака-Лейблера\footnote{\href{http://colah.github.io/posts/2015-09-Visual-Information/}{Visual Information Theory}}}
 
 Насколько распределение $P$ отличается от распределения $Q$?
 \[
