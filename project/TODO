@@ -14,5 +14,4 @@
     anton [10:49 PM] 
     вроде же достаточно social_features_new написать вот так и все встанет на свои места
     social_features_new = ["followers_count", "friends_count", "statuses_count", "favourites_count", "listed_count", "created_year", "verified"]
-    
-  
+6. в дз 1 сохранение в файл перенести вверх, добавить чтение из файла, чтобы графики можно было сделать отдельным этапом
