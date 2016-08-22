@@ -1,1 +1,1 @@
-__author__ = 'k.stroykova'
+w__author__ = 'k.stroykova'
