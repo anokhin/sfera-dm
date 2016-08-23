@@ -15,72 +15,95 @@ ACCESS_TOKEN_SECRET = "yI5oR83fTgDP2PujLKkK1euU976ucYHGdPGpB5GofA2ND"
 api = twitter.Api(consumer_key=CONSUMER_KEY,
                   consumer_secret=CONSUMER_SECRET,
                   access_token_key=ACCESS_TOKEN_KEY,
-                  access_token_secret=ACCESS_TOKEN_SECRET)
+                  access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
 
 
-found_followers = set()
+alive = set()
+dead = set()
+with open('../../data_sphere/all_list') as f:
+    for line in f:
+        alive.add(tuple(sorted(line.strip().lower().split())))
+with open('../../data_sphere/dead_list') as f:
+    for line in f:
+        dead.add(tuple(sorted(line.strip().lower().split())))
+alive = alive - dead
+all_kw = alive | dead
 
+users_f_name = '/home/stroykova/Dropbox/data_sphere/users'
 
-if os.path.exists("filtered_home.json_lines"):
-    for line in open("filtered_home.json_lines"):
-        if not line.strip():
+filtered_users_f_name = "/home/stroykova/Dropbox/data_sphere/filtered_users"
+alive_users_f_name = "/home/stroykova/Dropbox/data_sphere/alive_users"
+dead_users_f_name = "/home/stroykova/Dropbox/data_sphere/dead_users"
+
+users = set()
+with open(users_f_name) as f:
+    for line in f:
+        if not line or line.isspace():
             continue
-
         try:
-            user, tweets = json.loads(line)
-        except:
-            print line
-            raise
-        found_followers.add(user)
-
-    followers_file = open("filtered_home.json_lines", 'a')
-else:
-    followers_file = open("filtered_home.json_lines", 'w')
-
-if os.path.exists("seen_home.list"):
-    for line in open("seen_home.list"):
-        l = line.strip()
-        if not l:
+            user = json.loads(line)
+        except Exception as ex:
             continue
-        user = int(l)
-        found_followers.add(user)
-    seen_followers_file = open("seen_home.list", 'a')
-else:
-    seen_followers_file = open("seen_home.list", 'w')
+        users.add(user['id'])
+print 'total users', len(users)
 
 
-str_idx = 0
-count = 0
-for line in open("home_users.json_lines"):
-    print len(found_followers)
+def read_file(filename):
 
-    if not line.strip():
+    users = set()
+    if os.path.exists(filename):
+        with open(filename) as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                try:
+                    user, tweets = json.loads(line)
+                except:
+                    continue
+
+                users.add(user)
+
+    f = open(filename, 'a')
+
+    return f, users
+
+
+filtered_file, filtered_users = read_file(filtered_users_f_name)
+print 'filtered users', len(filtered_users)
+alive_file, alive_users = read_file(alive_users_f_name)
+print 'alive users', len(alive_users)
+dead_file, dead_users = read_file(dead_users_f_name)
+print 'dead users', len(dead_users)
+
+
+def append_user(f, users_set, user, tweets):
+    f.write(json.dumps((user, tweets)))
+    f.write("\n")
+    users_set.add(user)
+
+
+for idx, user in enumerate(users):
+    if user in filtered_users:
         continue
-    str_idx += 1
-    if str_idx < 8000:
+    if user in alive_users:
+        continue
+    if user in dead_users:
         continue
 
-    user = json.loads(line)
-    user_id = user['id']
-    if user_id in found_followers:
-        continue
-
-    print user_id
-
-    print "found:", str(len(found_followers))
-    print "filtered:", str(str_idx)
-    print ""
+    if idx % 100 == 0:
+        print 'filtered users', len(filtered_users)
+        print 'alive users', len(alive_users)
+        print 'dead users', len(dead_users)
 
     retry = True
     br = False
     while retry:
         try:
-            timeline = api.GetUserTimeline(user_id=user_id, trim_user=True, exclude_replies=True, count=200)
+            timeline = api.GetUserTimeline(user_id=user, trim_user=True, exclude_replies=True, count=1000)
             retry = False
         except twitter.TwitterError as ex:
             if ex.message == u"Not authorized.":
-                seen_followers_file.write(str(user_id))
-                print user_id
                 print "Not auth"
                 br = True
                 break
@@ -93,7 +116,7 @@ for line in open("home_users.json_lines"):
             print ex.message
 
             if ex.message[0]['code'] == 88:
-                sleep_time = api.GetSleepTime("statuses/user_timeline")
+                sleep_time = 1000
                 print "sleep for ", sleep_time
                 time.sleep(sleep_time)
                 continue
@@ -102,11 +125,6 @@ for line in open("home_users.json_lines"):
 
     if br:
         continue
-
-    seen_followers_file.write(str(user_id))
-    seen_followers_file.write('\n')
-
-    found_followers.add(user_id)
 
     user_tweets = []
 
@@ -131,9 +149,26 @@ for line in open("home_users.json_lines"):
 
         user_tweets.append(item.AsDict())
 
-    if len(user_tweets) > 10:
-        followers_file.write(json.dumps((user_id, user_tweets)))
-        followers_file.write("\n")
-        print "found_user", user_id
+    tweet_words = set()
+    for ut in user_tweets:
+        tweet_words.update(t.strip() for t in ut['text'].lower().split() if bool(t.strip()) and not t.isspace())
 
-    print len(found_followers)
+    is_dead = False
+    is_alive = False
+
+    for tokens in alive:
+        a = all(t in tweet_words for t in tokens)
+        if a:
+            print tokens
+            print tweet_words
+        is_alive |= a
+    for tokens in dead:
+        is_dead |= all(t in tweet_words for t in tokens)
+
+    print user, is_dead, is_alive
+    if (is_dead and is_alive) or ((not is_dead) and (not is_alive)):
+        append_user(filtered_file, filtered_users, user, user_tweets)
+    elif is_dead:
+        append_user(dead_file, dead_users, user, user_tweets)
+    elif is_alive:
+        append_user(alive_file, alive_users, user, user_tweets)
