@@ -33,22 +33,26 @@ all_kw = alive | dead
 
 
 users_f_name = '../../data_sphere/users'
-users_list_f_name = '../../data_sphere/users_list'
-
 
 
 class UsersWriter:
     def __init__(self):
+        self.users = set()
+        try:
+            with open(users_f_name) as f:
+                for line in f:
+                    if not line or line.isspace():
+                        continue
+                    user = json.loads(line)
+                    self.users.add(user['id'])
+        except Exception as ex:
+            print line
+            print ex
+            pass
+
+        print len(self.users)
 
         self.users_file = open(users_f_name, 'a')
-
-        try:
-            self.users_list_file = open(users_list_f_name)
-            self.users = set(json.loads(self.users_list_file.read()))
-            self.users_list_file = open(users_list_f_name, 'w')
-        except:
-            self.users_list_file = open(users_list_f_name, 'w')
-            self.users = set()
 
     def write_user(self, user):
         if 'status' in user:
@@ -65,8 +69,6 @@ class UsersWriter:
 
     def close(self):
         self.users_file.close()
-        self.users_list_file.write(json.dumps([u for u in self.users]))
-        self.users_list_file.close()
 
 
 def main():
@@ -79,12 +81,12 @@ def main():
 
     tweet_writer = UsersWriter()
 
-    while all_kw:
-        kw = random.sample(all_kw, 1)[0]
-        kw = ' '.join(kw + ('marvel', 'comics'))
-        print kw
+    try:
+        while all_kw:
+            kw = random.sample(all_kw, 1)[0]
+            kw = ' '.join(kw + ('marvel', 'comics'))
+            print kw
 
-        try:
             try:
                 result = api.GetSearch(kw, count=10000)
             except twitter.TwitterError as ex:
@@ -92,15 +94,15 @@ def main():
                 if ex.message[0]['code'] == 44:
                     break
                 if ex.message[0]['code'] == 88:
+                    sleep_time = 100
                     print "sleep for ", sleep_time
                     time.sleep(sleep_time)
                     continue
-
-                print "some other error:", ex
-                break
-            except Exception as ex:
-                print ex
-                break
+            except IOError:
+                sleep_time = 100
+                print "sleep for ", sleep_time
+                time.sleep(sleep_time)
+                continue
 
             for status in result:
                 # print user.id
@@ -116,10 +118,9 @@ def main():
 
             print 'users found: %s' % len(tweet_writer.users)
 
-        except Exception as ex:
-            print ex
-
-    tweet_writer.close()
+    except Exception as ex:
+        print ex
+        tweet_writer.close()
 
 
 if __name__ == "__main__":
