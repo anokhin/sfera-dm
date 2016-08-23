@@ -35,17 +35,19 @@ users_f_name = '/home/stroykova/Dropbox/data_sphere/users'
 class UsersWriter:
     def __init__(self):
         self.users = set()
-        try:
-            with open(users_f_name) as f:
-                for line in f:
-                    if not line or line.isspace():
-                        continue
+
+        with open(users_f_name) as f:
+            for line in f:
+                if not line or line.isspace():
+                    continue
+                try:
                     user = json.loads(line)
-                    self.users.add(user['id'])
-        except Exception as ex:
-            print line
-            print ex
-            pass
+                except Exception as ex:
+                    print line
+                    print ex
+                    continue
+
+                self.users.add(user['id'])
 
         print len(self.users)
 
@@ -91,12 +93,12 @@ def main():
                 if ex.message[0]['code'] == 44:
                     break
                 if ex.message[0]['code'] == 88:
-                    sleep_time = 100
+                    sleep_time = 1000
                     print "sleep for ", sleep_time
                     time.sleep(sleep_time)
                     continue
             except IOError:
-                sleep_time = 100
+                sleep_time = 1000
                 print "sleep for ", sleep_time
                 time.sleep(sleep_time)
                 continue
