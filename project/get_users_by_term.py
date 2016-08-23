@@ -28,12 +28,9 @@ with open('../../data_sphere/dead_list') as f:
 
 alive = alive - dead
 
-
 all_kw = alive | dead
 
-
-users_f_name = '../../data_sphere/users'
-
+users_f_name = '/home/stroykova/Dropbox/data_sphere/users'
 
 class UsersWriter:
     def __init__(self):
