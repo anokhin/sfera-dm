@@ -17,11 +17,11 @@ ACCESS_TOKEN_SECRET = "RxIHlIylRycp8dPZfV8fXSM2WtMP74lteIp5P6jxwh4XW"
 alive = set()
 dead = set()
 
-with open('../../data_sphere/all_list') as f:
+with open('/media/d_500/Dropbox/data_sphere/all_list') as f:
     for line in f:
         alive.add(tuple(sorted(line.strip().lower().split())))
 
-with open('../../data_sphere/dead_list') as f:
+with open('/media/d_500/Dropbox/data_sphere/dead_list') as f:
     for line in f:
         dead.add(tuple(sorted(line.strip().lower().split())))
 
@@ -30,7 +30,7 @@ alive = alive - dead
 
 all_kw = alive | dead
 
-users_f_name = '/home/stroykova/Dropbox/data_sphere/users'
+users_f_name = '/media/d_500/Dropbox/data_sphere/users'
 
 class UsersWriter:
     def __init__(self):
@@ -93,14 +93,24 @@ def main():
                 if ex.message[0]['code'] == 44:
                     break
                 if ex.message[0]['code'] == 88:
-                    sleep_time = 1000
+                    print ex.message
+                    sleep_time = 60
                     print "sleep for ", sleep_time
                     time.sleep(sleep_time)
+                    api = twitter.Api(consumer_key=CONSUMER_KEY,
+                                      consumer_secret=CONSUMER_SECRET,
+                                      access_token_key=ACCESS_TOKEN_KEY,
+                                      access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
                     continue
             except IOError:
-                sleep_time = 1000
+                print ex.message
+                sleep_time = 60
                 print "sleep for ", sleep_time
                 time.sleep(sleep_time)
+                api = twitter.Api(consumer_key=CONSUMER_KEY,
+                                  consumer_secret=CONSUMER_SECRET,
+                                  access_token_key=ACCESS_TOKEN_KEY,
+                                  access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
                 continue
 
             for status in result:
