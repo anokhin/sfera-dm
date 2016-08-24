@@ -84,6 +84,12 @@ def append_user(f, users_set, user, tweets):
 
 
 for idx, user in enumerate(users):
+    if idx % 100 == 0:
+        print idx, 'of', len(users)
+        print 'filtered users', len(filtered_users)
+        print 'alive users', len(alive_users)
+        print 'dead users', len(dead_users)
+
     if user in filtered_users:
         continue
     if user in alive_users:
@@ -91,16 +97,12 @@ for idx, user in enumerate(users):
     if user in dead_users:
         continue
 
-    if idx % 100 == 0:
-        print 'filtered users', len(filtered_users)
-        print 'alive users', len(alive_users)
-        print 'dead users', len(dead_users)
-
     retry = True
     br = False
     while retry:
         try:
-            timeline = api.GetUserTimeline(user_id=user, trim_user=True, exclude_replies=True, count=1000)
+            timeline = api.GetUserTimeline(user_id=user, trim_user=False, include_rts=True, exclude_replies=False, count=1000)
+            print len(timeline)
             retry = False
         except twitter.TwitterError as ex:
             if ex.message == u"Not authorized.":
@@ -116,12 +118,17 @@ for idx, user in enumerate(users):
             print ex.message
 
             if ex.message[0]['code'] == 88:
-                sleep_time = 1000
+                sleep_time = 60
                 print "sleep for ", sleep_time
                 time.sleep(sleep_time)
                 continue
             br = True
             break
+
+        except IOError:
+            sleep_time = 60
+            print "sleep for ", sleep_time
+            time.sleep(sleep_time)
 
     if br:
         continue
@@ -132,38 +139,23 @@ for idx, user in enumerate(users):
         if item.lang != 'en':
             continue
 
-        if item.retweeted:
-            continue
-
-        if item.truncated:
-            continue
-
-        if item.user_mentions:
-            continue
-
-        if item.media:
-            continue
-
-        if item.urls:
-            continue
-
         user_tweets.append(item.AsDict())
 
-    tweet_words = set()
+    tweets_words = list()
     for ut in user_tweets:
+        tweet_words = set()
         tweet_words.update(t.strip() for t in ut['text'].lower().split() if bool(t.strip()) and not t.isspace())
+        hashtags = ' '.join(ht['text'] for ht in ut["hashtags"])
+        tweet_words.update(t.strip() for t in hashtags.lower().split() if bool(t.strip()) and not t.isspace())
+        tweets_words.append(tweet_words)
 
     is_dead = False
     is_alive = False
 
     for tokens in alive:
-        a = all(t in tweet_words for t in tokens)
-        if a:
-            print tokens
-            print tweet_words
-        is_alive |= a
+        is_alive |= any(all(t in tweet_words for t in tokens) and any(t in tweet_words for t in ('marvel', 'comics', 'hero', 'comic')) for tweet_words in tweets_words)
     for tokens in dead:
-        is_dead |= all(t in tweet_words for t in tokens)
+        is_dead |= any(all(t in tweet_words for t in tokens) and any(t in tweet_words for t in ('marvel', 'comics', 'hero', 'comic')) for tweet_words in tweets_words)
 
     print user, is_dead, is_alive
     if (is_dead and is_alive) or ((not is_dead) and (not is_alive)):
