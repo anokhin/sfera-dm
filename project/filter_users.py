@@ -17,23 +17,27 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
                   access_token_key=ACCESS_TOKEN_KEY,
                   access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
 
+# base_path = "/home/stroykova/Dropbox/data_sphere/"
+base_path = "/media/d_500/Dropbox/data_sphere/"
 
 alive = set()
 dead = set()
-with open('../../data_sphere/all_list') as f:
+with open(base_path + 'all_list') as f:
     for line in f:
         alive.add(tuple(sorted(line.strip().lower().split())))
-with open('../../data_sphere/dead_list') as f:
+with open(base_path + 'dead_list') as f:
     for line in f:
         dead.add(tuple(sorted(line.strip().lower().split())))
 alive = alive - dead
 all_kw = alive | dead
 
-users_f_name = '/home/stroykova/Dropbox/data_sphere/users'
 
-filtered_users_f_name = "/home/stroykova/Dropbox/data_sphere/filtered_users"
-alive_users_f_name = "/home/stroykova/Dropbox/data_sphere/alive_users"
-dead_users_f_name = "/home/stroykova/Dropbox/data_sphere/dead_users"
+
+users_f_name = base_path + 'users'
+
+filtered_users_f_name = base_path + "filtered_users"
+alive_users_f_name = base_path + "alive_users"
+dead_users_f_name = base_path + "dead_users"
 
 users = set()
 with open(users_f_name) as f:
@@ -121,16 +125,31 @@ for idx, user in enumerate(users):
                 sleep_time = 60
                 print "sleep for ", sleep_time
                 time.sleep(sleep_time)
+                api = twitter.Api(consumer_key=CONSUMER_KEY,
+                                  consumer_secret=CONSUMER_SECRET,
+                                  access_token_key=ACCESS_TOKEN_KEY,
+                                  access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
                 continue
             br = True
             break
 
-        except IOError:
+        except IOError as ex:
             sleep_time = 60
+            print ex
+            br = True
             print "sleep for ", sleep_time
             time.sleep(sleep_time)
+            api = twitter.Api(consumer_key=CONSUMER_KEY,
+                              consumer_secret=CONSUMER_SECRET,
+                              access_token_key=ACCESS_TOKEN_KEY,
+                              access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
+            continue
 
     if br:
+        continue
+
+    if not timeline:
+        append_user(filtered_file, filtered_users, user, [])
         continue
 
     user_tweets = []

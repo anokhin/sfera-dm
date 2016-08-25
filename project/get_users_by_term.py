@@ -20,8 +20,8 @@ ACCESS_TOKEN_SECRET = "RxIHlIylRycp8dPZfV8fXSM2WtMP74lteIp5P6jxwh4XW"
 alive = set()
 dead = set()
 
-base_path = "/home/stroykova/Dropbox/data_sphere/"
-# base_path = "/media/d_500/Dropbox/data_sphere/"
+# base_path = "/home/stroykova/Dropbox/data_sphere/"
+base_path = "/media/d_500/Dropbox/data_sphere/"
 
 with open(base_path + 'all_list') as f:
     for line in f:
@@ -122,6 +122,9 @@ def main():
             try:
                 result = api.GetSearch(kw, count=10000, result_type='recent')
             except twitter.TwitterError as ex:
+                if ex.message == "json decoding":
+                    break
+
                 print ex
                 print ex.message[0]['message']
                 if ex.message[0]['code'] == 44:
