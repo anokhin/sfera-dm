@@ -129,6 +129,8 @@ def main():
                 print ex.message[0]['message']
                 if ex.message[0]['code'] == 44:
                     break
+                if ex.message[0]['code'] == 130:
+                    break
                 if ex.message[0]['code'] == 88:
                     print ex.message
                     sleep_time = 60
