@@ -115,27 +115,33 @@ def main():
     try:
         while all_kw:
             kw = random.sample(all_kw, 1)[0]
-            kw = ','.join(kw + ('marvel', 'comics'))
-
+            kw = ','.join(kw + ('marvel',))
             print kw
 
             try:
                 result = api.GetSearch(kw, count=10000, result_type='recent')
             except twitter.TwitterError as ex:
-                if ex.message == "json decoding":
+                if "json decoding" in ex.message:
                     break
+                try:
 
-                print ex
-                print ex.message[0]['message']
-                if ex.message[0]['code'] == 44:
-                    break
-                if ex.message[0]['code'] == 130:
-                    break
-                if ex.message[0]['code'] == 88:
-                    print ex.message
-                    sleep_time = 60
-                    print "sleep for ", sleep_time
-                    time.sleep(sleep_time)
+                    print ex
+                    print ex.message[0]['message']
+                    if ex.message[0]['code'] == 44:
+                        break
+                    if ex.message[0]['code'] == 130:
+                        break
+                    if ex.message[0]['code'] == 88:
+                        print ex.message
+                        sleep_time = 60
+                        print "sleep for ", sleep_time
+                        time.sleep(sleep_time)
+                        api = twitter.Api(consumer_key=CONSUMER_KEY,
+                                          consumer_secret=CONSUMER_SECRET,
+                                          access_token_key=ACCESS_TOKEN_KEY,
+                                          access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
+                        continue
+                except:
                     api = twitter.Api(consumer_key=CONSUMER_KEY,
                                       consumer_secret=CONSUMER_SECRET,
                                       access_token_key=ACCESS_TOKEN_KEY,
@@ -176,5 +182,5 @@ def main():
 
 
 if __name__ == "__main__":
-    while main() < 20000:
+    while main() < 40000:
         pass
