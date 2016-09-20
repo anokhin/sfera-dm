@@ -272,7 +272,7 @@ Optimization: не требуется
 \[
 y = h(\mathbf{x}, \mathbf{w}) = \sum_{d=1}^D x_d w_d + w_0 = \mathbf{x}^T \mathbf{w} + w_0
 \]
-Добавим к $x$ фиктивный компонент $x_0 = 1$
+Добавим к $\mathbf{x}$ фиктивный компонент $x_0 = 1$
 \[
 y = h(\mathbf{x}, \mathbf{w}) = \sum_{d=0}^D x_d w_d = \mathbf{x}^T \mathbf{w},
 \]
@@ -438,7 +438,7 @@ KNN
 
 \end{frame}
 
-\begin{frame}{Проблема 2. Проклятие размерности}
+\begin{frame}{Проблема 2. Проклятие размерности\footnote{\href{http://jeremykun.com/2016/02/08/big-dimensions-and-what-you-can-do-about-it/}{Big Dimensions, and What You Can Do About It}}}
 
 \begin{center}
 \includegraphics[scale=0.3]{images/pts.png}
