@@ -18,7 +18,7 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,
                   access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
 
 # base_path = "/home/stroykova/Dropbox/data_sphere/"
-base_path = "/media/d_500/Dropbox/data_sphere/"
+base_path = "/media/d_500/data_sphere/"
 
 alive = set()
 dead = set()
@@ -114,7 +114,7 @@ for idx, user in enumerate(users):
                 br = True
                 break
 
-            if ex.message == "json decoding":
+            if "json decoding" in ex.message or "json decoding" in str(ex.message):
                 br = True
                 break
 

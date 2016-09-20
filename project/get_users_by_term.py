@@ -21,7 +21,7 @@ alive = set()
 dead = set()
 
 # base_path = "/home/stroykova/Dropbox/data_sphere/"
-base_path = "/media/d_500/Dropbox/data_sphere/"
+base_path = "/media/d_500/data_sphere/"
 
 with open(base_path + 'all_list') as f:
     for line in f:
@@ -128,9 +128,9 @@ def main():
                     print ex
                     print ex.message[0]['message']
                     if ex.message[0]['code'] == 44:
-                        break
+                        continue
                     if ex.message[0]['code'] == 130:
-                        break
+                        continue
                     if ex.message[0]['code'] == 88:
                         print ex.message
                         sleep_time = 60
@@ -147,7 +147,7 @@ def main():
                                       access_token_key=ACCESS_TOKEN_KEY,
                                       access_token_secret=ACCESS_TOKEN_SECRET, sleep_on_rate_limit=True)
                     continue
-            except IOError:
+            except IOError as ex:
                 print ex.message
                 sleep_time = 60
                 print "sleep for ", sleep_time
@@ -182,5 +182,5 @@ def main():
 
 
 if __name__ == "__main__":
-    while main() < 40000:
+    while main() < 400000:
         pass
