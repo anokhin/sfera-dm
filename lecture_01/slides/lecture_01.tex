@@ -52,7 +52,7 @@
 
 \tcbset{highlight math style={enhanced,colframe=red,colback=white,arc=4pt,boxrule=1pt}}
 
-\author{Николай Анохин}
+\author{Стройкова Ксения}
 \title{\newline \newline \newline Лекция 1 \\ Задачи Data Mining}
 
 \begin{document}
@@ -61,15 +61,18 @@
 \titlepage
 \end{frame}
 
-\begin{frame}{Николай Анохин}
-
-\begin{center}
-\includegraphics[scale=0.325]{images/timeline.png}
-\end{center}
+\begin{frame}{Стройкова Ксения}
+\begin{itemize}
+	\item 2010 - 2014: .Net разработчик, Skyforge
+	\item 2014: Технопарк
+	\item 2014: Магистр техники и технологий, информатика и вычислительная техника, МГТУ
+	\item 2014 - н.вр.: Программист-исследователь в отделе анализа данных
+\end{itemize}
 
 \begin{footnotesize}
-e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
-тел.: +7 (903) 111-44-60
+e-mail: \href{mailto:k.stroykova@corp.mail.ru}{k.stroykova@corp.mail.ru} \\
+тел.: +7 (926) 594-08-14 \\
+slack: \url{http://spheremailru.slack.com}
 \end{footnotesize}
 
 \end{frame}
@@ -146,7 +149,7 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
     \caption{80 --- 94}
   \end{subfigure}\hfill
   \begin{subfigure}[b]{.45\linewidth}
-    \centering   
+    \centering
     \includegraphics[height=3cm]{images/5.png}
     \caption{95 --- 100}
   \end{subfigure}%
@@ -192,6 +195,19 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 
 \end{frame}
 
+\begin{frame}{Data Mining в KDD}
+
+Этапы KDD
+\begin{itemize}
+\item selection
+\item preprocessing
+\item transformation
+\item data mining
+\item interpretation, evaluation
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}{Data Mining как моделирование}
 
 \begin{quote}{Data Mining}
@@ -218,7 +234,7 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
     \begin{footnotesize}
     \begin{overprint}
 				\onslide<1>
-				\begin{center}			
+				\begin{center}
 			\begin{tabular}{r  c  c}
 			& ABV, \% & Quality \\
 			\hline
@@ -248,23 +264,23 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 			\qquad\qquad\Downarrow (\text{ML-принцип})
 			\]
 			\[
-			\begin{cases} 
-			\mu_g=11.4, \sigma_g=1.3 \\ 
+			\begin{cases}
+			\mu_g=11.4, \sigma_g=1.3 \\
 			\mu_b=10.2, \sigma_b=1.0
 			\end{cases}
 			\]
-			  \onslide<3> 
-			  Обучаем линейный SVM: 
+			  \onslide<3>
+			  Обучаем линейный SVM:
 			  \[\text{alcohol} > 11.2 \Rightarrow \text{good}\]
 			  \onslide<4>
-			  Подсчитываем параметры данных: \[\langle \text{alcohol} \rangle_g = 11.4,\; \langle \text{alcohol} \rangle_b = 10.2\]		
+			  Подсчитываем параметры данных: \[\langle \text{alcohol} \rangle_g = 11.4,\; \langle \text{alcohol} \rangle_b = 10.2\]
 		\end{overprint}
 		\end{footnotesize}
-    \end{column}    
+    \end{column}
     \begin{column}{.49\linewidth}
     \begin{center}
 \includegraphics[width=0.95\textwidth]{images/wine.png}
-\end{center}   
+\end{center}
     \end{column}
 \end{columns}
 
@@ -292,8 +308,8 @@ e-mail: \href{mailto:n.anokhin@corp.mail.ru}{n.anokhin@corp.mail.ru} \\
 \begin{frame}{Некоторые важные события в истории Data Mining}
 
 \begin{enumerate}
-\item[1989] IJCAI-89 Workshop on Knowledge Discovery in Databases 
-\item[1995] ACM SIGKDD Conference on Knowledge Discovery and Data Mining
+\item[1989] IJCAI-89 Workshop on Knowledge Discovery in Databases\footnote{\url{http://www.kdnuggets.com/meetings/kdd89/}}
+\item[1995] ACM SIGKDD Conference on Knowledge Discovery and Data Mining\footnote{\url{http://www.kdd.org/conferences}}
 \item[2001] Leo Breiman's ``Statistical Modeling: The Two Cultures''
 \item[2003] Программа Total Information Awareness
 \item[2005] Doug Cutting и Mike Cafarella разработали пакет обработки данных Hadoop
@@ -328,17 +344,17 @@ Data-
 %        \centering
 %        \begin{subfigure}[b]{0.45\textwidth}
 %                \includegraphics[width=\textwidth]{images/google.png}
-%                \caption{Google}                
-%        \end{subfigure}%        
+%                \caption{Google}
+%        \end{subfigure}%
 %        \begin{subfigure}[b]{0.45\textwidth}
 %                \includegraphics[width=\textwidth]{images/linkedin.png}
-%                \caption{LinkedIn}     
+%                \caption{LinkedIn}
 %        \end{subfigure}
-%        
+%
 %        \begin{subfigure}[b]{0.45\textwidth}
 %                \includegraphics[width=\textwidth]{images/delay.png}
-%                \caption{KnowDelay}                
-%        \end{subfigure}%        
+%                \caption{KnowDelay}
+%        \end{subfigure}%
 %        \begin{subfigure}[b]{0.45\textwidth}
 %                \includegraphics[width=0.9\textwidth]{images/digits.png}
 %                \caption{Handwritten digits}
@@ -393,7 +409,7 @@ CRM = Customer Relationship Management
 \item Наблюдаем $10^9$ человек
 \item Человек в среднем посещает отель раз в $100$ дней
 \item Есть $10^5$ отелей на $100$ человек каждый
-\item Проверим посещения за $1000$ дней 
+\item Проверим посещения за $1000$ дней
 \end{itemize}
 
 Вероятность для конкретной пары встретиться в отеле в конкретный день:
@@ -457,18 +473,18 @@ Cross Industry Standard Process for Data Mining
 		\item сбор требований и ограничений
 		\item постановка задачи в терминах Data Mining
 		\end{itemize}
-		
+
 		$\mathcal{D}$ -- множество, содержащее все рассматриваемые в задаче объекты \\  \vspace{1em}
 		$f: \mathcal{D} \rightarrow \mathcal{Y}$ -- целевая функция \\ \vspace{1em}
-		
+
 		Цель -- с использованием данных о конечном множестве объектов из $\mathcal{D}$ (data set) научиться предсказывать значения целевой функции для любых объектов из $\mathcal{D}$
-		
+
 		\vspace{1em}
-		Задача {\bf с учителем} -- для ``известных'' объектов дано значение целевой функции, иначе -- задача {\bf без учителя}.	
+		Задача {\bf с учителем} -- для ``известных'' объектов дано значение целевой функции, иначе -- задача {\bf без учителя}.
 				\end{small}
-		
+
     \end{column}
-    %   
+    %
     \begin{column}{.3\linewidth}
     \vspace{-0em}
 		\begin{center}
@@ -488,7 +504,7 @@ Cross Industry Standard Process for Data Mining
 		\item первичный сбор данных
 		\item ознакомление с данными и понимание их специфики
 		\end{itemize}
-		
+
 		\vspace{1em}
 
 		{\bf Data preparation}
@@ -496,7 +512,7 @@ Cross Industry Standard Process for Data Mining
 		\item формирование финального набора данных
 		\end{itemize}
     \end{column}
-    %   
+    %
     \begin{column}{.3\textwidth}
     \vspace{-0em}
 		\begin{center}
@@ -511,7 +527,7 @@ Cross Industry Standard Process for Data Mining
 
 $\mathcal{D}$ -- множество, содержащее все рассматриваемые в задаче объекты \\
 $d \in \mathcal{D}$ --  объект,  $\phi_j: \mathcal{D} \rightarrow F_j$ -- признак
-    
+
 \vspace{1em}
 Виды признаков
 \begin{itemize}
@@ -579,7 +595,7 @@ H = \{h(\mathbf{x}, \theta) \,:\, \mathcal{X} \times \Theta \rightarrow \mathcal
 
 \end{block}
     \end{column}
-    %   
+    %
     \begin{column}{.3\textwidth}
     \vspace{-0em}
 		\begin{center}
@@ -587,7 +603,7 @@ H = \{h(\mathbf{x}, \theta) \,:\, \mathcal{X} \times \Theta \rightarrow \mathcal
     \end{center}
     \end{column}
   \end{columns}
-    
+
 \end{frame}
 
 \begin{frame}{Виды моделей}
@@ -619,7 +635,7 @@ p(y_k | \mathbf{x}) = \frac{p(\mathbf{x} | y_k) p(y_k)}{p(\mathbf{x})}
 \end{frame}
 
 \begin{frame}{Качество вина}
-    
+
 {\bf признаковое описание}: $\mathbf{x} \in \mathbb{R}^1$ \\
 \vspace{1em}
 {\bf целевая переменная}: $y = 1$, если вино хорошее, $y = 0$ иначе \\
@@ -637,14 +653,14 @@ p(\mathbf{x} |  \text{bad}) \sim \mathcal{N}(\mathbf{x} | \mu_b, \sigma_b), \;\;
 \end{frame}
 
 \begin{frame}{Дерево решений}
-    
+
 \begin{columns}
 \begin{column}{.5\textwidth}
 \begin{center}
 \includegraphics[width=\textwidth]{images/dtree.png}
 \end{center}
 \end{column}
-%   
+%
 \begin{column}{.5\textwidth}
 \begin{tiny}
 \begin{center}
@@ -713,7 +729,7 @@ Learning = Representation + Evaluation + Optimization\footnote{\href{https://hom
 		\item подробное рассмотрение шагов, предпринятых при построении
 		\item поиск бизнес-требований, которые не удовлетворены
 		\end{itemize}
-		
+
 		\vspace{1em}
 
 		{\bf Deployment}
@@ -722,7 +738,7 @@ Learning = Representation + Evaluation + Optimization\footnote{\href{https://hom
 		\item развертывание и использование модели
 		\end{itemize}
     \end{column}
-    %   
+    %
     \begin{column}{.3\textwidth}
     \vspace{-0em}
 		\begin{center}
@@ -739,7 +755,7 @@ Learning = Representation + Evaluation + Optimization\footnote{\href{https://hom
     \begin{column}{.5\textwidth}
     	\includegraphics[width=\textwidth]{images/semma.png}
     \end{column}
-       
+
     \begin{column}{.5\textwidth}
     \vspace{-0em}
 	\begin{center}
@@ -782,28 +798,28 @@ EDA направлен на предварительное изучение да
         \centering
         \begin{subfigure}[b]{0.3\textwidth}
                 \includegraphics[width=\textwidth]{images/plot.png}
-                \caption{Plot}                
-        \end{subfigure}%        
+                \caption{Plot}
+        \end{subfigure}%
         \begin{subfigure}[b]{0.3\textwidth}
                 \includegraphics[width=\textwidth]{images/scatter.png}
-                \caption{Scatter}     
+                \caption{Scatter}
         \end{subfigure}
         \begin{subfigure}[b]{0.3\textwidth}
                 \includegraphics[width=\textwidth]{images/bar.png}
-                \caption{Barplot}     
+                \caption{Barplot}
         \end{subfigure}
-        
+
         \begin{subfigure}[b]{0.3\textwidth}
                 \includegraphics[width=\textwidth]{images/pie.png}
-                \caption{Piechart}                
-        \end{subfigure}%        
+                \caption{Piechart}
+        \end{subfigure}%
         \begin{subfigure}[b]{0.3\textwidth}
                 \includegraphics[width=\textwidth]{images/heatmap.png}
-                \caption{Heatmap}     
+                \caption{Heatmap}
         \end{subfigure}
         \begin{subfigure}[b]{0.3\textwidth}
                 \includegraphics[width=\textwidth]{images/box.png}
-                \caption{Boxplot}     
+                \caption{Boxplot}
         \end{subfigure}
 \end{figure}
 
@@ -812,22 +828,22 @@ EDA направлен на предварительное изучение да
 \begin{frame}{Полезные советы}
 
 \begin{columns}[T]
-    \begin{column}{.5\textwidth}    	
+    \begin{column}{.5\textwidth}
     	\begin{itemize}
 		\item Все познается в сравнении
 		\item Причинно-следственные связи
 		\item Размерность имеет значение (больше -- лучше)
-		\end{itemize}	
+		\end{itemize}
     \end{column}
-    %   
+    %
     \begin{column}{.5\textwidth}
     \begin{itemize}
 		\item Не избегать пояснений
 		\item Content is king
-		\end{itemize}		
+		\end{itemize}
     \end{column}
   \end{columns}
-  
+
   \begin{center}
    		\includegraphics[width=0.6\textwidth]{images/salaries.png}
     \end{center}
