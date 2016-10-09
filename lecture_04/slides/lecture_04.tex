@@ -30,13 +30,13 @@
 	backgroundcolor=\color{lightgray},
 	commentstyle=\color{blue},
 	frame=single
-	breakatwhitespace, 
-	language=python, 
-	columns=fullflexible, 
-	keepspaces, 
-	breaklines, 
-	tabsize=3, 
-	showstringspaces=false, 
+	breakatwhitespace,
+	language=python,
+	columns=fullflexible,
+	keepspaces,
+	breaklines,
+	tabsize=3,
+	showstringspaces=false,
 	extendedchars=true,
 	numbers=left
 }
@@ -91,7 +91,7 @@
 \newcommand{\tikzfancyarrow}[2][2cm]{\tikz[baseline=-0.5ex]\node [arrowstyle=#1] {#2};}
 \newcommand*\rot{\rotatebox{90}}
 
-\author{Николай Анохин}
+\author{Стройкова Ксения}
 \title{\newline \newline \newline Лекция 4 \\ Различные аспекты кластеризации}
 
 \begin{document}
@@ -106,7 +106,7 @@
 {\bf Дано.} Признаковые описания $N$ объектов $\mathbf{x} = (x_1, \ldots, x_m) \in \mathcal{X}$, образующие тренировочный набор данных $X$
 
 \vspace{1em}
-{\bf Найти.} Модель из семейства параметрических функций 
+{\bf Найти.} Модель из семейства параметрических функций
 \[
 H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mathcal{Y} \mid \mathcal{Y} = \{1, \ldots, K\}\},
 \]
@@ -122,11 +122,11 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
 		\begin{enumerate}
 					\item Hierarchical Clustering
 			\item dbscan, OPTICS
-			\item Смесь гауссовских распределений и k-means++
+			\item Смесь гауссовских распределений и k-means
 		\end{enumerate}
-		
+
     \end{column}
-       
+
     \begin{column}{.6\textwidth}
     \vspace{-0em}
 	\begin{center}
@@ -156,7 +156,7 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
 
 \begin{frame}{Expectation Maximization}
 
-{\bf Дано.} \\ Известно распределение $P(\mathbf{X}, \mathbf{Z} | \theta)$, где $\mathbf{x}$ -- наблюдаемые переменные, а $\mathbf{z}$ -- скрытые. 
+{\bf Дано.} \\ Известно распределение $P(\mathbf{X}, \mathbf{Z} | \theta)$, где $\mathbf{x}$ -- наблюдаемые переменные, а $\mathbf{z}$ -- скрытые.
 
 {\bf Найти.} \\ $\theta$,  максимизирующее $P(\mathbf{X} | \theta)$.
 
@@ -177,9 +177,9 @@ H = \{h(\mathbf{x, \mathbf{\theta}}): \mathcal{X} \times \Theta \rightarrow \mat
     \begin{column}{.5\textwidth}
     \begin{center}
    		\includegraphics[scale=0.5]{images/movies_data.png}
-    \end{center}   
+    \end{center}
     \end{column}
-       
+
     \begin{column}{.5\textwidth}
 	Для каждого пользователя известно, есть ли у него/нее интерес к романтике, экшену и средняя цена купленных фильмов
     \end{column}
@@ -221,7 +221,7 @@ p(x | C_k) \sim \mathcal{N}(x | \mu_k, \sigma_k)
 \]
 \item[M]
 \[
-N_k = \sum_{n=1}^N \gamma_{nk}, \qquad \pi_k = \frac{N_k}{N} 
+N_k = \sum_{n=1}^N \gamma_{nk}, \qquad \pi_k = \frac{N_k}{N}
 \]
 \[
 P_{ki} = \frac{1}{N_k} \sum_{n=1}^N \gamma_{nk} I_{ni}, \quad \mu_{k} = \frac{1}{N_k} \sum_{n=1}^N \gamma_{nk} x_n, \quad \sigma_k = \frac 1 {N_k} \sum_{n=1}^N \gamma_{nk} ({x}_n - \mu_k)^2
@@ -257,7 +257,7 @@ P_{ki} = \frac{1}{N_k} \sum_{n=1}^N \gamma_{nk} I_{ni}, \quad \mu_{k} = \frac{1}
 
 \begin{frame}{Модификации алгоритма}
 
-Взять уже известную нам функцию потерь (инерцию) и ``поиграть'' с функцией расстояния. 
+Взять уже известную нам функцию потерь (инерцию) и ``поиграть'' с функцией расстояния.
 \[
 \tilde J(\mu) = \sum_{n=1}^N \sum_{k=1}^K r_{nk} d(\mathbf{x}_n, \mu_k), \quad r_{nk} = \begin{cases}
 1, \; \text{для } k = \arg \min_j d(\mathbf{x}_n, \mu_j) \\
@@ -289,7 +289,7 @@ P_{ki} = \frac{1}{N_k} \sum_{n=1}^N \gamma_{nk} I_{ni}, \quad \mu_{k} = \frac{1}
 		\]
 	\end{itemize}
     \end{column}
-       
+
     \begin{column}{.5\textwidth}
     \vspace{2em}
 	\begin{center}
@@ -333,7 +333,7 @@ $  $\includegraphics[scale=0.2]{images/orig.png}
    		\includegraphics[scale=0.5]{images/edit.png}
     \end{center}
     \end{column}
-       
+
     \begin{column}{.6\textwidth}
     \begin{itemize}
 		\item Жаккар
@@ -349,7 +349,7 @@ $  $\includegraphics[scale=0.2]{images/orig.png}
 		\item Хэмминг \\
 		{\it $d_H$ -- количество различных компонент в $\mathbf{x}$ и $\mathbf{y}$.}
 	\end{itemize}
-    
+
     \end{column}
   \end{columns}
 
@@ -377,15 +377,15 @@ $  $\includegraphics[scale=0.2]{images/orig.png}
 {\it Идея.} Выбрать критерий качества кластеризации и построить его значение для $K = 1, 2, \ldots$
 
 \begin{columns}[]
-    \begin{column}{.5\textwidth} 
+    \begin{column}{.5\textwidth}
     \begin{itemize}
 	\item средняя сумма квадратов расстояния до центроида
 	\item средний диаметр кластера
-	\end{itemize} 		    
+	\end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
     \vspace{1em}
-    \includegraphics[scale=0.3]{images/elbow.png}    
+    \includegraphics[scale=0.3]{images/elbow.png}
     \end{column}
 \end{columns}
 
@@ -512,7 +512,7 @@ KL(P \| Q) = \sum_z P(z) \log \frac{P(z)}{Q(z)}
 
 \begin{frame}{Digits Dataset}
 
-около 1800 картинок 8x8 с рукописными цифрами 
+около 1800 картинок 8x8 с рукописными цифрами
 
 \begin{center}
 \includegraphics[scale=0.5]{images/digits.png}
@@ -524,7 +524,7 @@ KL(P \| Q) = \sum_z P(z) \log \frac{P(z)}{Q(z)}
 
 \begin{frame}{MNIST Dataset}
 
-70000 картинок 20x20 с рукописными цифрами 
+70000 картинок 20x20 с рукописными цифрами
 
 \begin{center}
 \includegraphics[scale=1.0]{images/mnistdigits.jpg}
